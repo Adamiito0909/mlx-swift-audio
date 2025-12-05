@@ -105,15 +105,15 @@ public enum TTSProvider: String, CaseIterable, Identifiable, Sendable {
     }
   }
 
-  /// All available voices for this provider
+  /// All available voices for this provider (derived from engine Voice enums)
   public var availableVoices: [Voice] {
     switch self {
       case .kokoro:
-        Self.kokoroVoices
+        KokoroEngine.Voice.allVoices
       case .orpheus:
-        Self.orpheusVoices
+        OrpheusEngine.Voice.allVoices
       case .marvis:
-        Self.marvisVoices
+        MarvisEngine.Voice.allVoices
       case .outetts:
         Self.outeTTSVoices
       case .chatterbox:
@@ -126,93 +126,7 @@ public enum TTSProvider: String, CaseIterable, Identifiable, Sendable {
     availableVoices.contains { $0.id == voiceID }
   }
 
-  // MARK: - Voice Lists
-
-  /// Kokoro voice definitions
-  private static let kokoroVoices: [Voice] = [
-    // American Female
-    Voice.fromKokoroID("af_alloy"),
-    Voice.fromKokoroID("af_aoede"),
-    Voice.fromKokoroID("af_bella"),
-    Voice.fromKokoroID("af_heart"),
-    Voice.fromKokoroID("af_jessica"),
-    Voice.fromKokoroID("af_kore"),
-    Voice.fromKokoroID("af_nicole"),
-    Voice.fromKokoroID("af_nova"),
-    Voice.fromKokoroID("af_river"),
-    Voice.fromKokoroID("af_sarah"),
-    Voice.fromKokoroID("af_sky"),
-    // American Male
-    Voice.fromKokoroID("am_adam"),
-    Voice.fromKokoroID("am_echo"),
-    Voice.fromKokoroID("am_eric"),
-    Voice.fromKokoroID("am_fenrir"),
-    Voice.fromKokoroID("am_liam"),
-    Voice.fromKokoroID("am_michael"),
-    Voice.fromKokoroID("am_onyx"),
-    Voice.fromKokoroID("am_puck"),
-    Voice.fromKokoroID("am_santa"),
-    // British Female
-    Voice.fromKokoroID("bf_alice"),
-    Voice.fromKokoroID("bf_emma"),
-    Voice.fromKokoroID("bf_isabella"),
-    Voice.fromKokoroID("bf_lily"),
-    // British Male
-    Voice.fromKokoroID("bm_daniel"),
-    Voice.fromKokoroID("bm_fable"),
-    Voice.fromKokoroID("bm_george"),
-    Voice.fromKokoroID("bm_lewis"),
-    // Spanish
-    Voice.fromKokoroID("ef_dora"),
-    Voice.fromKokoroID("em_alex"),
-    // French
-    Voice.fromKokoroID("ff_siwis"),
-    // Hindi
-    Voice.fromKokoroID("hf_alpha"),
-    Voice.fromKokoroID("hf_beta"),
-    Voice.fromKokoroID("hm_omega"),
-    Voice.fromKokoroID("hm_psi"),
-    // Italian
-    Voice.fromKokoroID("if_sara"),
-    Voice.fromKokoroID("im_nicola"),
-    // Japanese
-    Voice.fromKokoroID("jf_alpha"),
-    Voice.fromKokoroID("jf_gongitsune"),
-    Voice.fromKokoroID("jf_nezumi"),
-    Voice.fromKokoroID("jf_tebukuro"),
-    Voice.fromKokoroID("jm_kumo"),
-    // Portuguese
-    Voice.fromKokoroID("pf_dora"),
-    Voice.fromKokoroID("pm_alex"),
-    Voice.fromKokoroID("pm_santa"),
-    // Chinese
-    Voice.fromKokoroID("zf_xiaobei"),
-    Voice.fromKokoroID("zf_xiaoni"),
-    Voice.fromKokoroID("zf_xiaoxiao"),
-    Voice.fromKokoroID("zf_xiaoyi"),
-    Voice.fromKokoroID("zm_yunjian"),
-    Voice.fromKokoroID("zm_yunxi"),
-    Voice.fromKokoroID("zm_yunxia"),
-    Voice.fromKokoroID("zm_yunyang"),
-  ]
-
-  /// Orpheus voice definitions
-  private static let orpheusVoices: [Voice] = [
-    Voice(id: "tara", displayName: "Tara", languageCode: "en-US"),
-    Voice(id: "leah", displayName: "Leah", languageCode: "en-US"),
-    Voice(id: "jess", displayName: "Jess", languageCode: "en-US"),
-    Voice(id: "leo", displayName: "Leo", languageCode: "en-US"),
-    Voice(id: "dan", displayName: "Dan", languageCode: "en-GB"),
-    Voice(id: "mia", displayName: "Mia", languageCode: "en-US"),
-    Voice(id: "zac", displayName: "Zac", languageCode: "en-US"),
-    Voice(id: "zoe", displayName: "Zoe", languageCode: "en-US"),
-  ]
-
-  /// Marvis voice definitions
-  private static let marvisVoices: [Voice] = [
-    Voice.fromMarvisID("conversational_a"),
-    Voice.fromMarvisID("conversational_b"),
-  ]
+  // MARK: - Voice Lists (for providers without typed Voice enums)
 
   /// OuteTTS voice definitions (supports custom speaker profiles)
   private static let outeTTSVoices: [Voice] = [

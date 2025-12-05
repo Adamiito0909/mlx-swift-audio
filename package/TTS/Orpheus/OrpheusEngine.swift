@@ -19,6 +19,16 @@ public final class OrpheusEngine: TTSEngine {
     case mia // Female, professional, articulate
     case zac // Male, enthusiastic, dynamic
     case zoe // Female, calm, soothing
+
+    /// Convert to generic Voice struct for UI display
+    public func toVoice() -> MLXAudio.Voice {
+      MLXAudio.Voice(id: rawValue, displayName: rawValue.capitalized, languageCode: "en-US")
+    }
+
+    /// All voices as generic Voice structs
+    public static var allVoices: [MLXAudio.Voice] {
+      allCases.map { $0.toVoice() }
+    }
   }
 
   // MARK: - TTSEngine Protocol Properties

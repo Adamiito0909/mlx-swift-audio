@@ -72,6 +72,27 @@ public final class KokoroEngine: TTSEngine, StreamingTTSEngine {
     case zmYunxi
     case zmYunxia
     case zmYunyang
+
+    /// Voice ID in snake_case format (e.g., "af_heart")
+    public var voiceID: String {
+      // Convert camelCase rawValue to snake_case (e.g., "afHeart" -> "af_heart")
+      let raw = rawValue
+      guard raw.count >= 2 else { return raw.lowercased() }
+      // Insert underscore after the 2-letter prefix
+      let prefix = raw.prefix(2).lowercased()
+      let name = raw.dropFirst(2).lowercased()
+      return "\(prefix)_\(name)"
+    }
+
+    /// Convert to generic Voice struct for UI display
+    public func toVoice() -> MLXAudio.Voice {
+      MLXAudio.Voice.fromKokoroID(voiceID)
+    }
+
+    /// All voices as generic Voice structs
+    public static var allVoices: [MLXAudio.Voice] {
+      allCases.map { $0.toVoice() }
+    }
   }
 
   // MARK: - TTSEngine Protocol Properties

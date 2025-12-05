@@ -88,6 +88,16 @@ public final class MarvisEngine: TTSEngine, StreamingTTSEngine {
   public enum Voice: String, CaseIterable, Sendable {
     case conversationalA = "conversational_a"
     case conversationalB = "conversational_b"
+
+    /// Convert to generic Voice struct for UI display
+    public func toVoice() -> MLXAudio.Voice {
+      MLXAudio.Voice.fromMarvisID(rawValue)
+    }
+
+    /// All voices as generic Voice structs
+    public static var allVoices: [MLXAudio.Voice] {
+      allCases.map { $0.toVoice() }
+    }
   }
 
   /// Quality levels for audio generation
