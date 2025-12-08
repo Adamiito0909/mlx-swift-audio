@@ -211,7 +211,6 @@ class ChatterboxModel: Module {
       }
 
       // Skip computed buffers that are generated during initialization
-      // (see Python: strict=False because of rand_noise, pos_enc.pe, stft_window, trim_fade)
       if key.contains("freqsCis") || key.contains("freqs_cis") {
         continue
       }
@@ -259,7 +258,6 @@ class ChatterboxModel: Module {
       )
 
       // === CAMPPlus (speaker_encoder) weight name mappings ===
-      // These match the Python xvector.py sanitize() method
 
       // Helper function for 1-indexed to 0-indexed regex replacement
       func replaceWithZeroIndexed(_ input: String, pattern: String, prefix: String, suffix: String) -> String {

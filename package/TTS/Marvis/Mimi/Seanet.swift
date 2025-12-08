@@ -174,7 +174,6 @@ final class EncoderLayer: Module {
     }
     _residuals.wrappedValue = res
 
-    // NOTE: causal = true here (matches python)
     _downsample.wrappedValue = StreamableConv1d(
       inChannels: mult * config.nfilters,
       outChannels: mult * config.nfilters * 2,

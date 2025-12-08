@@ -71,7 +71,6 @@ final class MimiConvTranspose1d: Module {
     groups: Int = 1,
     bias: Bool = true,
   ) {
-    // Weight shape mirrors your Python: (out_channels // groups, ksize, in_channels)
     let scale: Float = 1.0 / Float(inChannels * ksize)
     weight = MLXRandom.uniform(
       low: -scale, high: scale,
@@ -86,7 +85,6 @@ final class MimiConvTranspose1d: Module {
     self.outChannels = outChannels
   }
 
-  // Expand weight as needed to emulate grouped depthwise transposed conv like the Python version
   private func expandedWeightAndGroups() -> (MLXArray, Int) {
     if groups == inChannels, groups == outChannels {
       var eyeW = eye(outChannels)
@@ -111,7 +109,7 @@ final class MimiConvTranspose1d: Module {
   }
 }
 
-// MARK: - Normalized wrappers (kept as simple pass-through like Python)
+// MARK: - Normalized wrappers
 
 final class NormConv1d: Module {
   @ModuleInfo var conv: MimiConv1d

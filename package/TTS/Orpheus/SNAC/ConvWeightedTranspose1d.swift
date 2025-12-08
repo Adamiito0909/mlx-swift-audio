@@ -15,13 +15,11 @@ class WNConvTranspose1d: Module {
   let dilation: Int
   let groups: Int
 
-  // Helper for normalizing weight_v, equivalent to Python's normalize_weight(weight_v, except_dim=0)
   // Normalizes over axes 1 and 2 for a weight_v of shape [in_channels, kernel_size, out_channels_per_group]
   private static func normalizeWeightV(_ v: MLXArray) -> MLXArray {
     guard v.ndim == 3 else {
       fatalError("weight_v must have 3 dimensions for normalization")
     }
-    // Python's normalize_weight(weight_v, except_dim=0) normalizes over axes 1 and 2
     let axesToSumOver = [1, 2]
     let vSquared = MLX.pow(v, 2)
     let sumSquared = MLX.sum(vSquared, axes: axesToSumOver, keepDims: true)
@@ -67,7 +65,7 @@ class WNConvTranspose1d: Module {
     // self.weightV has shape [in_channels, kernel_size, out_channels_per_group]
     // self.weightG has shape [in_channels, 1, 1]
 
-    // Normalize self.weightV (like Python's normalize_weight(self.weight_v, except_dim=0))
+    // Normalize self.weightV
     let normV = Self.normalizeWeightV(weightV) // Shape [in_channels, 1, 1]
 
     // Calculate effective weight before transposing for the MLX op
@@ -77,7 +75,6 @@ class WNConvTranspose1d: Module {
     // MLX.convTransposed1d expects weight: [out_channels, kernel_width, in_channels / groups]
     // Our effectiveWeightPreTranspose is [in_channels, kernel_size, out_channels_per_group]
     // To match MLX Swift: transpose axes [2, 1, 0] (if groups=1, then out_channels_per_group = out_channels)
-    // This matches Python's weight.swapaxes(0, 2)
     let weight = effectiveWeightPreTranspose.transposed(axes: [2, 1, 0]) // Shape [out_channels_per_group, kernel_size, in_channels]
 
     let output = MLX.convTransposed1d(

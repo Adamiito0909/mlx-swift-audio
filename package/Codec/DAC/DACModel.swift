@@ -8,7 +8,6 @@ import MLXNN
 // MARK: - Encoder Block
 
 /// Encoder block with residual units and strided convolution
-/// Uses Sequential to match Python weight key structure
 class DACEncoderBlock: Module, UnaryLayer {
   let block: Sequential
 
@@ -37,7 +36,6 @@ class DACEncoderBlock: Module, UnaryLayer {
 // MARK: - Encoder
 
 /// DAC Encoder: audio -> latent representation
-/// Uses Sequential to match Python weight key structure
 class DACEncoder: Module, UnaryLayer {
   let block: Sequential
   let encDim: Int
@@ -86,7 +84,6 @@ class DACEncoder: Module, UnaryLayer {
 // MARK: - Decoder Block
 
 /// Decoder block with upsampling and residual units
-/// Uses Sequential to match Python weight key structure
 class DACDecoderBlock: Module, UnaryLayer {
   let block: Sequential
 
@@ -116,7 +113,6 @@ class DACDecoderBlock: Module, UnaryLayer {
 // MARK: - Decoder
 
 /// DAC Decoder: latent representation -> audio
-/// Uses Sequential to match Python weight key structure
 class DACDecoder: Module, UnaryLayer {
   let model: Sequential
 

@@ -9,7 +9,6 @@ class SNACNoiseBlock: Module {
 
   init(dim: Int) {
     // WNConv1d for noise modulation - outputs 1 channel for noise scaling
-    // Bias is false in Python implementation for NoiseBlock's WNConv1d
     _linear.wrappedValue = WNConv1d(
       inChannels: dim,
       outChannels: 1,

@@ -117,7 +117,6 @@ final class Attention: Module {
 
   init(config: MimiTransformerConfig) {
     self.config = config
-    // Only kv_repeat == 1 supported (parity with your python)
     precondition(config.kvRepeat == 1, "only kv_repeat == 1 is supported")
 
     let numKV = config.numHeads / config.kvRepeat

@@ -43,7 +43,6 @@ class DACSnake1d: Module, UnaryLayer {
 
 /// Weight-normalized 1D convolution layer
 class DACWNConv1d: Module, UnaryLayer {
-  // Use @ModuleInfo to map Python snake_case keys to Swift camelCase
   @ModuleInfo(key: "weight_g") var weightG: MLXArray
   @ModuleInfo(key: "weight_v") var weightV: MLXArray
   var bias: MLXArray?
@@ -87,7 +86,7 @@ class DACWNConv1d: Module, UnaryLayer {
   }
 
   func callAsFunction(_ x: MLXArray) -> MLXArray {
-    // Input x: [batch, time, channels] - channels-last format (like Python)
+    // Input x: [batch, time, channels] - channels-last format
     // Output: [batch, time, out_channels] - channels-last format
     // NO internal transposition - callers handle format conversion
 
@@ -118,7 +117,6 @@ class DACWNConv1d: Module, UnaryLayer {
 
 /// Weight-normalized transposed 1D convolution layer
 class DACWNConvTranspose1d: Module, UnaryLayer {
-  // Use @ModuleInfo to map Python snake_case keys to Swift camelCase
   @ModuleInfo(key: "weight_g") var weightG: MLXArray
   @ModuleInfo(key: "weight_v") var weightV: MLXArray
   var bias: MLXArray?
@@ -163,7 +161,7 @@ class DACWNConvTranspose1d: Module, UnaryLayer {
   }
 
   func callAsFunction(_ x: MLXArray) -> MLXArray {
-    // Input x: [batch, time, channels] - channels-last format (like Python)
+    // Input x: [batch, time, channels] - channels-last format
     // Output: [batch, time, out_channels] - channels-last format
     // NO internal transposition - callers handle format conversion
 
@@ -193,7 +191,6 @@ class DACWNConvTranspose1d: Module, UnaryLayer {
 // MARK: - Residual Unit
 
 /// Residual unit with dilated convolutions and snake activations
-/// Uses Sequential to match Python weight key structure
 class DACResidualUnit: Module, UnaryLayer {
   let block: Sequential
 

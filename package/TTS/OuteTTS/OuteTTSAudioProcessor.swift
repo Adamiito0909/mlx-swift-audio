@@ -110,7 +110,7 @@ func calculatePitch(
       // Check voicing threshold
       let autocorr0 = autocorr[0] + 1e-8
       if peakVal / autocorr0 > threshold, peakIdx > 0 {
-        // Parabolic interpolation for sub-sample accuracy (matches Python)
+        // Parabolic interpolation for sub-sample accuracy
         var delta: Float = 0.0
         if peakIdx > 0, peakIdx < frameLength - 1 {
           let alpha = autocorr[peakIdx - 1]
@@ -143,11 +143,11 @@ func extractSinglePitchValue(
     maxFreq: maxFreq,
   )
 
-  // Clip all values to [minFreq, maxFreq] range (matches Python behavior)
+  // Clip all values to [minFreq, maxFreq] range
   // This ensures unvoiced frames (0) become minFreq
   let clippedPitches = pitches.map { max(min($0, maxFreq), minFreq) }
 
-  // Calculate average pitch (includes all frames, matching Python)
+  // Calculate average pitch (includes all frames)
   let averagePitch = clippedPitches.isEmpty ? 0 : clippedPitches.reduce(0, +) / Float(clippedPitches.count)
 
   // Normalize to 0-1 range
@@ -274,7 +274,7 @@ class OuteTTSFeatures {
 
 // MARK: - Audio Preprocessing
 
-/// Preprocess audio for speaker profile creation (matches Python's process_audio_array)
+/// Preprocess audio for speaker profile creation
 /// - Parameters:
 ///   - audio: Input audio array (1D)
 ///   - sampleRate: Sample rate
@@ -360,7 +360,7 @@ final class OuteTTSAudioProcessor {
     text: String,
     words: [(word: String, start: Double, end: Double)],
   ) async throws -> OuteTTSSpeakerProfile {
-    // Preprocess audio (loudness normalization + peak limiting, matches Python)
+    // Preprocess audio (loudness normalization + peak limiting)
     let processedAudio = preprocessAudioForSpeaker(audio, sampleRate: sampleRate)
 
     // Encode preprocessed audio to get codes

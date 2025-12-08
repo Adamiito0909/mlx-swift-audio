@@ -275,16 +275,16 @@ func stftHiFiGAN(x: MLXArray, nFft: Int, hopLength: Int, window: MLXArray) -> (M
   return (real, imag)
 }
 
-/// Inverse Short-Time Fourier Transform (matches Python mlx-audio implementation exactly)
+/// Inverse Short-Time Fourier Transform
 func istftHiFiGAN(magnitude: MLXArray, phase: MLXArray, nFft: Int, hopLength: Int, window: MLXArray) -> MLXArray {
   // Clip magnitude
   let magClipped = MLX.clip(magnitude, max: Float(1e2))
 
-  // Convert to complex (matches Python: real = mag * cos(phase), imag = mag * sin(phase))
+  // Convert to complex
   let real = magClipped * MLX.cos(phase)
   let imag = magClipped * MLX.sin(phase)
 
-  // Create full spectrum (conjugate symmetric) - matches Python exactly
+  // Create full spectrum (conjugate symmetric)
   let B = real.shape[0]
   let F = real.shape[1]
   let numFrames = real.shape[2]
@@ -555,7 +555,6 @@ class HiFTGenerator: Module {
     h = h.swappedAxes(1, 2)
 
     // Split into magnitude and phase
-    // Note: sin on phase matches Python's "sin is redundancy, matches original"
     let nFftHalf = istftParams["n_fft"]! / 2 + 1
     let magnitude = MLX.exp(h[0..., 0 ..< nFftHalf, 0...])
     let phase = MLX.sin(h[0..., nFftHalf..., 0...])

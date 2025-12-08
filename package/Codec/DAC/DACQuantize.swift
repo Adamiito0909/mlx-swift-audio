@@ -22,7 +22,6 @@ class DACVectorQuantize: Module {
   let codebookSize: Int
   let codebookDim: Int
 
-  // Use @ModuleInfo to map Python snake_case keys to Swift camelCase
   @ModuleInfo(key: "in_proj") var inProj: DACWNConv1d
   @ModuleInfo(key: "out_proj") var outProj: DACWNConv1d
   let codebook: Embedding
@@ -80,14 +79,13 @@ class DACVectorQuantize: Module {
   }
 
   /// Find nearest codebook entries for latent vectors
-  /// Input latents: [batch, codebook_dim, time] (matches Python format)
+  /// Input latents: [batch, codebook_dim, time]
   func decodeLatents(_ latents: MLXArray) -> (zQ: MLXArray, indices: MLXArray) {
     let batch = latents.shape[0]
     let dim = latents.shape[1] // codebook_dim
     let time = latents.shape[2]
 
     // Reshape: [batch, dim, time] -> [batch*time, dim]
-    // Python: rearrange(latents, "b d t -> (b t) d")
     let encodings = latents.transposed(axes: [0, 2, 1]).reshaped([batch * time, dim])
     let codebookWeight = codebook.weight // [codebook_size, codebook_dim]
 
@@ -104,11 +102,9 @@ class DACVectorQuantize: Module {
     let minDist = MLX.argMax(MLX.negative(dist), axis: 1)
 
     // Reshape indices back: [batch*time] -> [batch, time]
-    // Python: rearrange((-dist).argmax(1), "(b t) -> b t", b=latents.shape[0])
     let indices = minDist.reshaped([batch, time])
 
     // Get quantized vectors and transpose to [batch, dim, time]
-    // Python: rearrange(self.codebook(indices), "b t d -> b d t")
     let zQ = decodeCode(indices) // Already returns [batch, dim, time] from decodeCode
 
     return (zQ, indices)

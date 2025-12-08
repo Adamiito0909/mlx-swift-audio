@@ -311,7 +311,6 @@ class T3: Module {
 // MARK: - Sampling Helpers
 
 /// Sample next token with temperature, top-p, and min-p filtering
-/// Matches Python mlx_lm implementation exactly for correctness
 private func sampleToken(
   logits: MLXArray,
   temperature: Float,
@@ -323,7 +322,6 @@ private func sampleToken(
     return MLX.argMax(logits, axis: -1)
   }
 
-  // Work with log-probs like Python implementation
   var logprobs = logSoftmax(logits / temperature, axis: -1)
 
   // Fast path: if both topP and minP are disabled, just sample directly
@@ -331,7 +329,7 @@ private func sampleToken(
     return MLXRandom.categorical(logprobs)
   }
 
-  // Apply top-p (nucleus sampling) - matches Python apply_top_p exactly
+  // Apply top-p (nucleus sampling)
   if topP > 0, topP < 1.0 {
     let probs = MLX.exp(logprobs)
     // Sort in ascending order
@@ -360,7 +358,7 @@ private func sampleToken(
     )
   }
 
-  // Apply min-p filtering - matches Python apply_min_p exactly
+  // Apply min-p filtering
   if minP > 0 {
     let topLogprob = logprobs.max(axis: -1, keepDims: true)
     let threshold = topLogprob + log(minP)
