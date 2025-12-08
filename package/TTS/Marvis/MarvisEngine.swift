@@ -316,7 +316,6 @@ public final class MarvisEngine: TTSEngine {
             let chunk = AudioChunk(
               samples: result.audio,
               sampleRate: result.sampleRate,
-              isLast: false,
               processingTime: result.processingTime,
             )
             continuation.yield(chunk)

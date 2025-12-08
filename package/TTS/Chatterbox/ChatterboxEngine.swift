@@ -433,7 +433,10 @@ public final class ChatterboxEngine: TTSEngine {
 
   // MARK: - Streaming
 
-  /// Generate audio as a stream of chunks (one per sentence)
+  /// Generate audio as a stream of chunks
+  ///
+  /// Text splitting (sentences and overflow) is handled by ChatterboxTTS.
+  ///
   /// - Parameters:
   ///   - text: The text to synthesize
   ///   - referenceAudio: Prepared reference audio (if nil, uses default sample)
@@ -442,8 +445,6 @@ public final class ChatterboxEngine: TTSEngine {
     _ text: String,
     referenceAudio: ChatterboxReferenceAudio? = nil,
   ) -> AsyncThrowingStream<AudioChunk, Error> {
-    // We need to prepare the reference audio before streaming starts
-    // This requires an async setup, so we handle it inside the stream
     AsyncThrowingStream { continuation in
       let task = Task { @MainActor [weak self] in
         guard let self else {
@@ -466,7 +467,7 @@ public final class ChatterboxEngine: TTSEngine {
           return
         }
 
-        // Prepare reference audio once for all sentences
+        // Prepare reference audio
         let ref: ChatterboxReferenceAudio
         do {
           if let referenceAudio {
@@ -488,23 +489,12 @@ public final class ChatterboxEngine: TTSEngine {
           return
         }
 
-        let sentences = SentenceTokenizer.splitIntoSentences(text: trimmedText)
-        guard !sentences.isEmpty else {
-          continuation.finish(throwing: TTSError.invalidArgument("Failed to split text into sentences"))
-          return
-        }
-
         let startTime = Date()
+        let sampleRate = provider.sampleRate
 
-        for (index, sentence) in sentences.enumerated() {
-          // Check for cancellation before generating each sentence
-          if Task.isCancelled {
-            continuation.finish()
-            return
-          }
-
-          let result = await chatterboxTTS.generate(
-            text: sentence,
+        do {
+          for try await samples in await chatterboxTTS.generateStreaming(
+            text: trimmedText,
             conditionals: ref.conditionals,
             exaggeration: exaggeration,
             cfgWeight: cfgWeight,
@@ -513,26 +503,20 @@ public final class ChatterboxEngine: TTSEngine {
             minP: minP,
             topP: topP,
             maxNewTokens: maxNewTokens,
-          )
+          ) {
+            guard !Task.isCancelled else { break }
 
-          // Check again after generation
-          if Task.isCancelled {
-            continuation.finish()
-            return
+            let chunk = AudioChunk(
+              samples: samples,
+              sampleRate: sampleRate,
+              processingTime: Date().timeIntervalSince(startTime),
+            )
+            continuation.yield(chunk)
           }
-
-          let chunk = AudioChunk(
-            samples: result.audio,
-            sampleRate: result.sampleRate,
-            isLast: index == sentences.count - 1,
-            processingTime: Date().timeIntervalSince(startTime),
-          )
-          continuation.yield(chunk)
-
-          MLXMemory.clearCache()
+          continuation.finish()
+        } catch {
+          continuation.finish(throwing: error)
         }
-
-        continuation.finish()
       }
 
       continuation.onTermination = { _ in

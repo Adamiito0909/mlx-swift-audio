@@ -140,16 +140,12 @@ public struct AudioChunk: Sendable {
   /// Sample rate in Hz (e.g., 24000)
   public let sampleRate: Int
 
-  /// Whether this is the final chunk in the stream
-  public let isLast: Bool
-
   /// Processing time for this chunk
   public let processingTime: TimeInterval
 
-  public init(samples: [Float], sampleRate: Int, isLast: Bool, processingTime: TimeInterval) {
+  public init(samples: [Float], sampleRate: Int, processingTime: TimeInterval) {
     self.samples = samples
     self.sampleRate = sampleRate
-    self.isLast = isLast
     self.processingTime = processingTime
   }
 }

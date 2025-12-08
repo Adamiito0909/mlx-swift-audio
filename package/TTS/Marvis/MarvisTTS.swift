@@ -116,9 +116,9 @@ actor MarvisTTS {
     voice: MarvisEngine.Voice,
     quality: MarvisEngine.QualityLevel,
   ) throws -> TTSGenerationResult {
-    let pieces = splitText(text, pattern: #"(\n+)"#)
+    let sentences = SentenceTokenizer.splitIntoSentences(text: text)
     let results = try generateCore(
-      text: pieces,
+      text: sentences,
       voice: voice,
       refAudio: nil,
       refText: nil,
@@ -138,9 +138,9 @@ actor MarvisTTS {
   ) -> AsyncThrowingStream<TTSGenerationResult, Error> {
     AsyncThrowingStream { continuation in
       do {
-        let pieces = self.splitText(text, pattern: #"(\n+)"#)
+        let sentences = SentenceTokenizer.splitIntoSentences(text: text)
         _ = try self.generateCore(
-          text: pieces,
+          text: sentences,
           voice: voice,
           refAudio: nil,
           refText: nil,
@@ -521,18 +521,6 @@ actor MarvisTTS {
     )
   }
 
-  // MARK: - Text Processing
-
-  private func splitText(_ text: String, pattern: String?) -> [String] {
-    if let pat = pattern, let re = try? NSRegularExpression(pattern: pat) {
-      let full = text.trimmingCharacters(in: .whitespacesAndNewlines)
-      let range = NSRange(full.startIndex ..< full.endIndex, in: full)
-      let splits = re.split(full, range: range)
-      return splits.isEmpty ? [full] : splits
-    }
-    return [text]
-  }
-
   // MARK: - Result Merging
 
   private static func mergeResults(_ parts: [TTSGenerationResult]) -> TTSGenerationResult {
@@ -564,26 +552,4 @@ private struct Segment {
   let speaker: Int
   let text: String
   let audio: MLXArray
-}
-
-private extension NSRegularExpression {
-  func split(_ s: String, range: NSRange) -> [String] {
-    var last = 0
-    var parts: [String] = []
-    enumerateMatches(in: s, options: [], range: range) { m, _, _ in
-      guard let m else { return }
-      let r = NSRange(location: last, length: m.range.location - last)
-      if let rr = Range(r, in: s) {
-        let piece = String(s[rr]).trimmingCharacters(in: .whitespacesAndNewlines)
-        if !piece.isEmpty { parts.append(piece) }
-      }
-      last = m.range.upperBound
-    }
-    let tailR = NSRange(location: last, length: range.upperBound - last)
-    if let rr = Range(tailR, in: s) {
-      let piece = String(s[rr]).trimmingCharacters(in: .whitespacesAndNewlines)
-      if !piece.isEmpty { parts.append(piece) }
-    }
-    return parts
-  }
 }

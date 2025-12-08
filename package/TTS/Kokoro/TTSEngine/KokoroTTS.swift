@@ -30,7 +30,15 @@ actor KokoroTTS {
 
   // MARK: - Constants
 
+  /// Kokoro model's absolute maximum token capacity
   private static let maxTokenCount = 510
+  /// Threshold for proactive splitting before hitting the hard limit.
+  ///
+  /// Using 450 (60 tokens below max) provides buffer for:
+  /// - Phonemization variance: same text can produce slightly different token counts
+  /// - Edge cases in token boundary handling
+  /// - Ensuring we never accidentally exceed maxTokenCount after a split
+  private static let safeTokenThreshold = 450
   private static let sampleRate = 24000
 
   // MARK: - Properties
@@ -105,8 +113,9 @@ actor KokoroTTS {
     text: String,
     voice: KokoroEngine.Voice,
     speed: Float = 1.0,
-    chunkCallback: @escaping @Sendable ([Float]) -> Void,
-  ) async throws {
+  ) async throws -> TTSGenerationResult {
+    let startTime = CFAbsoluteTimeGetCurrent()
+
     let sentences = SentenceTokenizer.splitIntoSentences(text: text)
     if sentences.isEmpty {
       throw KokoroTTSError.sentenceSplitError
@@ -114,14 +123,24 @@ actor KokoroTTS {
 
     self.voice = nil
 
+    var allAudio: [Float] = []
     for sentence in sentences {
-      let audio = try await generateAudioForSentence(text: sentence, voice: voice, speed: speed)
-      chunkCallback(audio)
-      MLXMemory.clearCache()
+      let audioChunks = try await generateAudioChunks(text: sentence, voice: voice, speed: speed)
+      for chunk in audioChunks {
+        allAudio.append(contentsOf: chunk)
+        MLXMemory.clearCache()
+      }
     }
+
+    let processingTime = CFAbsoluteTimeGetCurrent() - startTime
+    return TTSGenerationResult(
+      audio: allAudio,
+      sampleRate: Self.sampleRate,
+      processingTime: processingTime,
+    )
   }
 
-  func generateStream(
+  func generateStreaming(
     text: String,
     voice: KokoroEngine.Voice,
     speed: Float = 1.0,
@@ -132,27 +151,54 @@ actor KokoroTTS {
     }
 
     self.voice = nil
-    let index = Atomic<Int>(0)
+    let sentenceIndex = Atomic<Int>(0)
+    let pendingChunks = Mutex<[[Float]]>([])
 
     return AsyncThrowingStream {
-      let i = index.wrappingAdd(1, ordering: .relaxed).oldValue
+      // Check if we have pending chunks from a previous split
+      let nextPending = pendingChunks.withLock { chunks -> [Float]? in
+        if !chunks.isEmpty {
+          return chunks.removeFirst()
+        }
+        return nil
+      }
+      if let chunk = nextPending {
+        MLXMemory.clearCache()
+        return chunk
+      }
+
+      // Get next sentence
+      let i = sentenceIndex.wrappingAdd(1, ordering: .relaxed).oldValue
       guard i < sentences.count else { return nil }
 
-      let audio = try await self.generateAudioForSentence(text: sentences[i], voice: voice, speed: speed)
+      let audioChunks = try await self.generateAudioChunks(text: sentences[i], voice: voice, speed: speed)
+
+      guard !audioChunks.isEmpty else { return nil }
+
+      // If multiple chunks, store extras for subsequent iterations
+      if audioChunks.count > 1 {
+        pendingChunks.withLock { pending in
+          pending.append(contentsOf: audioChunks.dropFirst())
+        }
+      }
+
       MLXMemory.clearCache()
-      return audio
+      return audioChunks[0]
     }
   }
 
   // MARK: - Private Methods
 
-  private func generateAudioForSentence(
+  /// Generate audio chunks for text, splitting if necessary.
+  ///
+  /// Returns an array of audio chunks to support proper streaming when text is split.
+  private func generateAudioChunks(
     text: String,
     voice: KokoroEngine.Voice,
     speed: Float,
-  ) async throws -> [Float] {
+  ) async throws -> [[Float]] {
     if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-      return [0.0]
+      return [[0.0]]
     }
 
     // Load voice if it changed or if it was cleared
@@ -171,11 +217,30 @@ actor KokoroTTS {
     let phonemizedResult = try kokoroTokenizer.phonemize(text)
 
     let inputIds = PhonemeTokenizer.tokenize(phonemizedText: phonemizedResult.phonemes)
-    guard inputIds.count <= Self.maxTokenCount else {
-      throw KokoroTTSError.tooManyTokens
+
+    // If tokens exceed the safe threshold, split the text and process recursively
+    if inputIds.count > Self.safeTokenThreshold {
+      Log.tts.debug("KokoroTTS: Text exceeds safe token threshold (\(inputIds.count) > \(Self.safeTokenThreshold)), splitting...")
+
+      if let (firstHalf, secondHalf) = TextSplitter.splitAtPunctuationBoundary(text) {
+        Log.tts.debug("KokoroTTS: Split into '\(firstHalf.prefix(30))...' and '\(secondHalf.prefix(30))...'")
+
+        // Generate audio for both halves, returning separate chunks for streaming
+        let firstChunks = try await generateAudioChunks(text: firstHalf, voice: voice, speed: speed)
+        let secondChunks = try await generateAudioChunks(text: secondHalf, voice: voice, speed: speed)
+
+        return firstChunks + secondChunks
+      } else {
+        // Could not find a split point - if still under max, proceed; otherwise fail
+        guard inputIds.count <= Self.maxTokenCount else {
+          Log.tts.error("KokoroTTS: Text too long and cannot be split (\(inputIds.count) tokens)")
+          throw KokoroTTSError.tooManyTokens
+        }
+        Log.tts.warning("KokoroTTS: Could not split text, proceeding with \(inputIds.count) tokens")
+      }
     }
 
-    return try generateAudioForTokens(inputIds: inputIds, speed: speed)
+    return try [generateAudioForTokens(inputIds: inputIds, speed: speed)]
   }
 
   private func generateAudioForTokens(

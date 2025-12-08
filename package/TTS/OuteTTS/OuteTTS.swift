@@ -311,7 +311,76 @@ actor OuteTTS {
   }
 
   /// Generate audio from text
+  ///
+  /// Text is automatically split into sentences for processing.
   func generate(
+    text: String,
+    speaker: OuteTTSSpeakerProfile? = nil,
+    temperature: Float? = nil,
+    topP: Float? = nil,
+    maxTokens: Int? = nil,
+  ) async throws -> TTSGenerationResult {
+    let startTime = CFAbsoluteTimeGetCurrent()
+
+    // Split text into sentences
+    let sentences = SentenceTokenizer.splitIntoSentences(text: text)
+
+    var allAudio: [Float] = []
+    for sentence in sentences {
+      let result = try await generateChunk(
+        text: sentence,
+        speaker: speaker,
+        temperature: temperature,
+        topP: topP,
+        maxTokens: maxTokens,
+      )
+      allAudio.append(contentsOf: result.audio)
+      MLXMemory.clearCache()
+    }
+
+    let processingTime = CFAbsoluteTimeGetCurrent() - startTime
+    return TTSGenerationResult(
+      audio: allAudio,
+      sampleRate: config.sampleRate,
+      processingTime: processingTime,
+    )
+  }
+
+  /// Generate audio as a stream of chunks (one per sentence)
+  func generateStreaming(
+    text: String,
+    speaker: OuteTTSSpeakerProfile? = nil,
+    temperature: Float? = nil,
+    topP: Float? = nil,
+    maxTokens: Int? = nil,
+  ) -> AsyncThrowingStream<[Float], Error> {
+    let sentences = SentenceTokenizer.splitIntoSentences(text: text)
+    let speakerProfile = speaker
+    let temp = temperature
+    let top = topP
+    let maxToks = maxTokens
+
+    var sentenceIndex = 0
+    return AsyncThrowingStream {
+      guard sentenceIndex < sentences.count else { return nil }
+
+      let sentence = sentences[sentenceIndex]
+      sentenceIndex += 1
+
+      let result = try await self.generateChunk(
+        text: sentence,
+        speaker: speakerProfile,
+        temperature: temp,
+        topP: top,
+        maxTokens: maxToks,
+      )
+      MLXMemory.clearCache()
+      return result.audio
+    }
+  }
+
+  /// Generate audio for a single text chunk (no splitting)
+  private func generateChunk(
     text: String,
     speaker: OuteTTSSpeakerProfile? = nil,
     temperature: Float? = nil,
@@ -434,55 +503,6 @@ actor OuteTTS {
       sampleRate: config.sampleRate,
       processingTime: processingTime,
     )
-  }
-
-  /// Chunk text into smaller segments
-  func chunkText(_ text: String, maxWords: Int = 30) -> [String] {
-    let pattern = "[.!?。！？︕︖]+"
-    let regex = try? NSRegularExpression(pattern: pattern)
-    let range = NSRange(text.startIndex..., in: text)
-
-    var sentences: [String] = []
-    var lastEnd = text.startIndex
-
-    regex?.enumerateMatches(in: text, range: range) { match, _, _ in
-      if let matchRange = match?.range, let swiftRange = Range(matchRange, in: text) {
-        let sentence = String(text[lastEnd ..< swiftRange.upperBound])
-          .trimmingCharacters(in: .whitespaces)
-        if !sentence.isEmpty {
-          sentences.append(sentence)
-        }
-        lastEnd = swiftRange.upperBound
-      }
-    }
-
-    if lastEnd < text.endIndex {
-      let remaining = String(text[lastEnd...]).trimmingCharacters(in: .whitespaces)
-      if !remaining.isEmpty {
-        sentences.append(remaining)
-      }
-    }
-
-    var chunks: [String] = []
-    var currentChunk: [String] = []
-    var currentLength = 0
-
-    for sentence in sentences {
-      let words = sentence.split(separator: " ")
-      if currentLength + words.count > maxWords, !currentChunk.isEmpty {
-        chunks.append(currentChunk.joined(separator: " "))
-        currentChunk = []
-        currentLength = 0
-      }
-      currentChunk.append(sentence)
-      currentLength += words.count
-    }
-
-    if !currentChunk.isEmpty {
-      chunks.append(currentChunk.joined(separator: " "))
-    }
-
-    return chunks.isEmpty ? [text] : chunks
   }
 }
 

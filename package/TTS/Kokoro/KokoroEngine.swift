@@ -219,7 +219,7 @@ public final class KokoroEngine: TTSEngine {
     var firstChunkTime: TimeInterval = 0
 
     do {
-      for try await samples in try await kokoroTTS.generateStream(
+      for try await samples in try await kokoroTTS.generateStreaming(
         text: trimmedText,
         voice: voice,
         speed: speed,
@@ -323,7 +323,7 @@ public final class KokoroEngine: TTSEngine {
         var isFirst = true
 
         do {
-          for try await samples in try await kokoroTTS.generateStream(
+          for try await samples in try await kokoroTTS.generateStreaming(
             text: trimmedText,
             voice: voice,
             speed: speed,
@@ -336,7 +336,6 @@ public final class KokoroEngine: TTSEngine {
             let chunk = AudioChunk(
               samples: samples,
               sampleRate: provider.sampleRate,
-              isLast: false,
               processingTime: Date().timeIntervalSince(startTime),
             )
             continuation.yield(chunk)

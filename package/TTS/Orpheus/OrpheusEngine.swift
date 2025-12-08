@@ -207,7 +207,10 @@ public final class OrpheusEngine: TTSEngine {
 
   // MARK: - Streaming
 
-  /// Generate audio as a stream of chunks (one per sentence)
+  /// Generate audio as a stream of chunks
+  ///
+  /// Text splitting is handled by OrpheusTTS.
+  ///
   /// - Parameters:
   ///   - text: The text to synthesize
   ///   - voice: The voice to use
@@ -216,17 +219,62 @@ public final class OrpheusEngine: TTSEngine {
     _ text: String,
     voice: Voice,
   ) -> AsyncThrowingStream<AudioChunk, Error> {
-    sentenceStreamingGenerate(text: text, sampleRate: provider.sampleRate) { [self] sentence in
-      guard let orpheusTTS else {
-        throw TTSError.modelNotLoaded
+    AsyncThrowingStream { continuation in
+      let task = Task { @MainActor [weak self] in
+        guard let self else {
+          continuation.finish()
+          return
+        }
+
+        // Auto-load if needed
+        if !isLoaded {
+          do {
+            try await load()
+          } catch {
+            continuation.finish(throwing: error)
+            return
+          }
+        }
+
+        guard let orpheusTTS else {
+          continuation.finish(throwing: TTSError.modelNotLoaded)
+          return
+        }
+
+        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedText.isEmpty else {
+          continuation.finish(throwing: TTSError.invalidArgument("Text cannot be empty"))
+          return
+        }
+
+        let startTime = Date()
+        let sampleRate = provider.sampleRate
+
+        do {
+          for try await samples in await orpheusTTS.generateStreaming(
+            text: trimmedText,
+            voice: voice,
+            temperature: temperature,
+            topP: topP,
+          ) {
+            guard !Task.isCancelled else { break }
+
+            let chunk = AudioChunk(
+              samples: samples,
+              sampleRate: sampleRate,
+              processingTime: Date().timeIntervalSince(startTime),
+            )
+            continuation.yield(chunk)
+          }
+          continuation.finish()
+        } catch {
+          continuation.finish(throwing: error)
+        }
       }
-      let result = try await orpheusTTS.generate(
-        text: sentence,
-        voice: voice,
-        temperature: temperature,
-        topP: topP,
-      )
-      return result.audio
+
+      continuation.onTermination = { _ in
+        task.cancel()
+      }
     }
   }
 

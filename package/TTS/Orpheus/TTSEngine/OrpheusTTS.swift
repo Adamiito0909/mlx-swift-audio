@@ -176,6 +176,50 @@ actor OrpheusTTS {
   func generate(text: String, voice: OrpheusEngine.Voice, temperature: Float = 0.6, topP: Float = 0.8) throws -> TTSGenerationResult {
     let startTime = CFAbsoluteTimeGetCurrent()
 
+    // Split text into sentences
+    let sentences = SentenceTokenizer.splitIntoSentences(text: text)
+
+    var allAudio: [Float] = []
+    for sentence in sentences {
+      let result = try generateChunk(text: sentence, voice: voice, temperature: temperature, topP: topP)
+      allAudio.append(contentsOf: result.audio)
+      MLXMemory.clearCache()
+    }
+
+    let processingTime = CFAbsoluteTimeGetCurrent() - startTime
+    return TTSGenerationResult(
+      audio: allAudio,
+      sampleRate: Self.sampleRate,
+      processingTime: processingTime,
+    )
+  }
+
+  /// Generate audio as a stream of chunks (one per sentence)
+  func generateStreaming(
+    text: String,
+    voice: OrpheusEngine.Voice,
+    temperature: Float = 0.6,
+    topP: Float = 0.8,
+  ) -> AsyncThrowingStream<[Float], Error> {
+    let sentences = SentenceTokenizer.splitIntoSentences(text: text)
+
+    var sentenceIndex = 0
+    return AsyncThrowingStream {
+      guard sentenceIndex < sentences.count else { return nil }
+
+      let sentence = sentences[sentenceIndex]
+      sentenceIndex += 1
+
+      let result = try await self.generateChunk(text: sentence, voice: voice, temperature: temperature, topP: topP)
+      MLXMemory.clearCache()
+      return result.audio
+    }
+  }
+
+  /// Generate audio for a single text chunk (no splitting)
+  private func generateChunk(text: String, voice: OrpheusEngine.Voice, temperature: Float, topP: Float) throws -> TTSGenerationResult {
+    let startTime = CFAbsoluteTimeGetCurrent()
+
     // Prepare input with voice prefix
     let prompt = "\(voice.rawValue): \(text)"
     Log.tts.debug("Orpheus prompt: \(prompt)")

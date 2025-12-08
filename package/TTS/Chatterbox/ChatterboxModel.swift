@@ -581,6 +581,17 @@ class ChatterboxModel: Module {
       cfgWeight: cfgWeight,
     )
 
+    // Check for truncation: if we generated maxNewTokens and last token isn't EOS
+    let generatedCount = speechTokens.shape[1]
+    if generatedCount >= maxNewTokens {
+      let lastToken: Int32 = speechTokens[0, generatedCount - 1].item()
+      if lastToken != Int32(config.t3Config.stopSpeechToken) {
+        Log.tts.warning(
+          "ChatterboxTTS: Generation hit token limit (\(maxNewTokens)), audio may be truncated.",
+        )
+      }
+    }
+
     // Extract conditional batch (first in CFG pair)
     var filteredTokens = speechTokens[0 ..< 1]
 
