@@ -43,8 +43,8 @@ class DACSnake1d: Module, UnaryLayer {
 
 /// Weight-normalized 1D convolution layer
 class DACWNConv1d: Module, UnaryLayer {
-  @ModuleInfo(key: "weight_g") var weightG: MLXArray
-  @ModuleInfo(key: "weight_v") var weightV: MLXArray
+  @ParameterInfo(key: "weight_g") var weightG: MLXArray
+  @ParameterInfo(key: "weight_v") var weightV: MLXArray
   var bias: MLXArray?
 
   let kernelSize: Int
@@ -117,8 +117,8 @@ class DACWNConv1d: Module, UnaryLayer {
 
 /// Weight-normalized transposed 1D convolution layer
 class DACWNConvTranspose1d: Module, UnaryLayer {
-  @ModuleInfo(key: "weight_g") var weightG: MLXArray
-  @ModuleInfo(key: "weight_v") var weightV: MLXArray
+  @ParameterInfo(key: "weight_g") var weightG: MLXArray
+  @ParameterInfo(key: "weight_v") var weightV: MLXArray
   var bias: MLXArray?
 
   let kernelSize: Int

@@ -9,8 +9,8 @@ final class EuclideanCodebook: Module {
   private let dim: Int
 
   var initialized: MLXArray
-  @ModuleInfo(key: "embedding_sum") var embeddingSum: MLXArray
-  @ModuleInfo(key: "cluster_usage") var clusterUsage: MLXArray
+  @ParameterInfo(key: "embedding_sum") var embeddingSum: MLXArray
+  @ParameterInfo(key: "cluster_usage") var clusterUsage: MLXArray
 
   private(set) var _embedding: MLXArray
   private(set) var _c2: MLXArray

@@ -365,7 +365,7 @@ final class MarvisModel: Module {
   @ModuleInfo(key: "audio_embeddings") var audioEmbeddings: Embedding
   @ModuleInfo var projection: Linear // backbone_dim -> decoder_dim
   @ModuleInfo(key: "codebook0_head") var codebook0Head: Linear // logits for codebook 0
-  @ModuleInfo(key: "audio_head") var audioHead: MLXArray // [nq-1, decoder_dim, audio_vocab]
+  @ParameterInfo(key: "audio_head") var audioHead: MLXArray // [nq-1, decoder_dim, audio_vocab]
 
   private var backboneCausalMask: MLXArray?
   private var decoderCausalMask: MLXArray?

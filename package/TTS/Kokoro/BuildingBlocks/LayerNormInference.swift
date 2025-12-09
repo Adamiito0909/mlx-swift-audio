@@ -5,8 +5,8 @@ import MLXNN
 
 class LayerNormInference: Module {
   let eps: Float
-  @ModuleInfo(key: "gamma") var weight: MLXArray?
-  @ModuleInfo(key: "beta") var bias: MLXArray?
+  @ParameterInfo(key: "gamma") var weight: MLXArray?
+  @ParameterInfo(key: "beta") var bias: MLXArray?
 
   init(dims: Int = 0, eps: Float = 1e-5) {
     self.eps = eps

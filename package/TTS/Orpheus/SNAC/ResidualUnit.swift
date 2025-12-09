@@ -5,7 +5,7 @@ import MLXNN
 /// Snake activation wrapper for SNAC decoder
 /// Contains the learnable alpha parameter
 class SNACSnake: Module {
-  @ModuleInfo var alpha: MLXArray
+  @ParameterInfo var alpha: MLXArray
 
   init(channels: Int) {
     _alpha.wrappedValue = MLX.ones([1, channels, 1])

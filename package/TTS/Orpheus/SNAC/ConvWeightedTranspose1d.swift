@@ -5,9 +5,9 @@ import MLXNN
 /// ConvTranspose1d with weight normalization for SNAC decoder
 /// Weight keys: weight_g, weight_v, bias
 class WNConvTranspose1d: Module {
-  @ModuleInfo(key: "weight_g") var weightG: MLXArray
-  @ModuleInfo(key: "weight_v") var weightV: MLXArray
-  @ModuleInfo var bias: MLXArray?
+  @ParameterInfo(key: "weight_g") var weightG: MLXArray
+  @ParameterInfo(key: "weight_v") var weightV: MLXArray
+  @ParameterInfo var bias: MLXArray?
 
   let stride: Int
   let padding: Int

@@ -5,7 +5,7 @@ import Foundation
 import MLX
 import MLXNN
 
-/// Bidirectional LSTM module with proper @ModuleInfo weight mapping
+/// Bidirectional LSTM module
 class BiLSTM: Module {
   let inputSize: Int
   let hiddenSize: Int
@@ -13,16 +13,16 @@ class BiLSTM: Module {
   let batchFirst: Bool
 
   // Forward direction weights and biases
-  @ModuleInfo(key: "weight_ih_l0") var weightIhL0: MLXArray
-  @ModuleInfo(key: "weight_hh_l0") var weightHhL0: MLXArray
-  @ModuleInfo(key: "bias_ih_l0") var biasIhL0: MLXArray?
-  @ModuleInfo(key: "bias_hh_l0") var biasHhL0: MLXArray?
+  @ParameterInfo(key: "weight_ih_l0") var weightIhL0: MLXArray
+  @ParameterInfo(key: "weight_hh_l0") var weightHhL0: MLXArray
+  @ParameterInfo(key: "bias_ih_l0") var biasIhL0: MLXArray?
+  @ParameterInfo(key: "bias_hh_l0") var biasHhL0: MLXArray?
 
   // Backward direction weights and biases
-  @ModuleInfo(key: "weight_ih_l0_reverse") var weightIhL0Reverse: MLXArray
-  @ModuleInfo(key: "weight_hh_l0_reverse") var weightHhL0Reverse: MLXArray
-  @ModuleInfo(key: "bias_ih_l0_reverse") var biasIhL0Reverse: MLXArray?
-  @ModuleInfo(key: "bias_hh_l0_reverse") var biasHhL0Reverse: MLXArray?
+  @ParameterInfo(key: "weight_ih_l0_reverse") var weightIhL0Reverse: MLXArray
+  @ParameterInfo(key: "weight_hh_l0_reverse") var weightHhL0Reverse: MLXArray
+  @ParameterInfo(key: "bias_ih_l0_reverse") var biasIhL0Reverse: MLXArray?
+  @ParameterInfo(key: "bias_hh_l0_reverse") var biasHhL0Reverse: MLXArray?
 
   init(inputSize: Int, hiddenSize: Int, bias: Bool = true, batchFirst: Bool = true) {
     self.inputSize = inputSize

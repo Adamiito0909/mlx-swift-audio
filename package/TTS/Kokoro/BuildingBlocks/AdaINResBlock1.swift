@@ -7,8 +7,8 @@ class AdaINResBlock1: Module {
   @ModuleInfo var convs2: [ConvWeighted]
   @ModuleInfo var adain1: [AdaIN1d]
   @ModuleInfo var adain2: [AdaIN1d]
-  @ModuleInfo var alpha1: [MLXArray]
-  @ModuleInfo var alpha2: [MLXArray]
+  @ParameterInfo var alpha1: [MLXArray]
+  @ParameterInfo var alpha2: [MLXArray]
 
   let kernelSize: Int
   let dilations: [Int]

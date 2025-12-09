@@ -3,8 +3,8 @@ import MLX
 import MLXNN
 
 class Conv1dInference: Module {
-  @ModuleInfo var weight: MLXArray
-  @ModuleInfo var bias: MLXArray?
+  @ParameterInfo var weight: MLXArray
+  @ParameterInfo var bias: MLXArray?
 
   let padding: Int
   let dilation: Int
