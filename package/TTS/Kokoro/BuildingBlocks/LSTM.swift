@@ -1,6 +1,5 @@
-// TODO: Once https://github.com/ml-explore/mlx-swift/pull/312 is merged,
-// MLXNN.LSTM will support loading bias via @ParameterInfo. However, this BiLSTM
-// is still needed since MLXNN doesn't provide a bidirectional variant.
+// Bidirectional LSTM implementation.
+// MLXNN doesn't provide a bidirectional variant, so this custom implementation is needed.
 
 import Foundation
 import MLX
