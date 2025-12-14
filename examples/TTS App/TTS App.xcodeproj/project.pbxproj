@@ -310,7 +310,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "TTS App";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "TTS App may use the microphone to record reference audio for creating custom speaker profiles.";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "TTS App uses speech recognition to transcribe reference audio for creating custom speaker profiles.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -363,7 +362,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "TTS App";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "TTS App may use the microphone to record reference audio for creating custom speaker profiles.";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "TTS App uses speech recognition to transcribe reference audio for creating custom speaker profiles.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";

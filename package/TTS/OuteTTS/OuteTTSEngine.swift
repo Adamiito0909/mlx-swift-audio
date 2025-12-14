@@ -1,7 +1,6 @@
 import AVFoundation
 import Foundation
 import MLX
-import Speech
 
 /// OuteTTS engine - TTS with custom speaker profiles
 ///
@@ -31,6 +30,7 @@ public final class OuteTTSEngine: TTSEngine {
 
   @ObservationIgnored private var outeTTS: OuteTTS?
   @ObservationIgnored private let playback = TTSPlaybackController(sampleRate: TTSProvider.outetts.sampleRate)
+  @ObservationIgnored private var whisperEngine: WhisperEngine?
 
   // MARK: - Initialization
 
@@ -331,59 +331,45 @@ public final class OuteTTSEngine: TTSEngine {
 
   // MARK: - Speech Transcription
 
-  // TODO: Replace Apple's SFSpeechRecognizer with Whisper or another on-device STT engine
-  // when available in MLXAudio. Apple's API sends audio data to Apple servers and requires
-  // user permission (NSSpeechRecognitionUsageDescription). An on-device solution would be
-  // more private and wouldn't require additional permissions.
+  private func transcribeAudio(url: URL) async throws -> (text: String, words: [(word: String, start: Double, end: Double)]) {
+    // Load Whisper engine if needed
+    if whisperEngine == nil {
+      whisperEngine = WhisperEngine(modelSize: .base, quantization: .q4)
+    }
 
-  private nonisolated func transcribeAudio(url: URL) async throws -> (text: String, words: [(word: String, start: Double, end: Double)]) {
-    // Request speech recognition authorization
-    let authStatus = await withCheckedContinuation { continuation in
-      SFSpeechRecognizer.requestAuthorization { status in
-        continuation.resume(returning: status)
+    guard let whisper = whisperEngine else {
+      throw TTSError.invalidArgument("Failed to create Whisper engine")
+    }
+
+    if !whisper.isLoaded {
+      try await whisper.load(progressHandler: nil)
+    }
+
+    // Transcribe with word-level timestamps using DTW alignment
+    let result = try await whisper.transcribe(url, timestamps: .word)
+
+    // Extract word-level timestamps from segments (from DTW alignment)
+    // Strip words and filter empty ones (matches Python's audio_processor.py line 267)
+    var words: [(word: String, start: Double, end: Double)] = []
+
+    for segment in result.segments {
+      guard let segmentWords = segment.words else { continue }
+      for word in segmentWords {
+        let strippedWord = word.word.trimmingCharacters(in: .whitespaces)
+        // Skip empty words (shouldn't happen after Whisper filtering, but be safe)
+        guard !strippedWord.isEmpty else { continue }
+        words.append((word: strippedWord, start: word.start, end: word.end))
       }
     }
 
-    guard authStatus == .authorized else {
-      throw TTSError.invalidArgument("Speech recognition not authorized. Please enable it in Settings.")
+    // Debug: Print word timestamps for verification
+    print("[OuteTTS] Transcription: \"\(result.text)\"")
+    print("[OuteTTS] Word timestamps (\(words.count) words):")
+    for (i, word) in words.enumerated() {
+      let duration = word.end - word.start
+      print("  [\(i)] \"\(word.word)\" start=\(String(format: "%.3f", word.start))s end=\(String(format: "%.3f", word.end))s duration=\(String(format: "%.3f", duration))s")
     }
 
-    guard let recognizer = SFSpeechRecognizer() else {
-      throw TTSError.invalidArgument("Speech recognition not available for this locale")
-    }
-
-    guard recognizer.isAvailable else {
-      throw TTSError.invalidArgument("Speech recognition is not currently available")
-    }
-
-    let request = SFSpeechURLRecognitionRequest(url: url)
-    request.shouldReportPartialResults = false
-
-    return try await withCheckedThrowingContinuation { continuation in
-      recognizer.recognitionTask(with: request) { result, error in
-        if let error {
-          continuation.resume(throwing: TTSError.invalidArgument("Transcription failed: \(error.localizedDescription)"))
-          return
-        }
-
-        guard let result, result.isFinal else {
-          return
-        }
-
-        let transcription = result.bestTranscription
-        let text = transcription.formattedString
-
-        // Extract word-level timestamps
-        let words: [(word: String, start: Double, end: Double)] = transcription.segments.map { segment in
-          (
-            word: segment.substring,
-            start: segment.timestamp,
-            end: segment.timestamp + segment.duration,
-          )
-        }
-
-        continuation.resume(returning: (text, words))
-      }
-    }
+    return (result.text, words)
   }
 }
