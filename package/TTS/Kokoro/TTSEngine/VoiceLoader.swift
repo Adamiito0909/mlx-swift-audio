@@ -1,6 +1,7 @@
 import Foundation
 import Hub
 import MLX
+import MLXAudio
 
 // Utility class for loading voices from Hugging Face Hub.
 // Voice files are downloaded as safetensors and cached on disk automatically.
@@ -15,7 +16,7 @@ class VoiceLoader {
   }
 
   /// Load a voice from Hugging Face Hub (safetensors).
-  /// Files are cached locally by Hub.snapshot() to avoid re-downloading.
+  /// Files are cached locally by HubConfiguration.shared to avoid re-downloading.
   static func loadVoice(
     _ voice: KokoroEngine.Voice,
     repoId: String = defaultRepoId,
@@ -24,10 +25,10 @@ class VoiceLoader {
     let voiceId = voice.identifier
     let filename = "voices/\(voiceId).safetensors"
 
-    let modelDirectoryURL = try await Hub.snapshot(
+    let modelDirectoryURL = try await HubConfiguration.shared.snapshot(
       from: repoId,
       matching: [filename],
-      progressHandler: progressHandler,
+      progressHandler: progressHandler
     )
 
     let voiceFileURL = modelDirectoryURL.appending(path: filename)

@@ -287,10 +287,10 @@ class SNACDecoder: Module {
     filename: String = defaultWeightsFilename,
     progressHandler: @escaping (Progress) -> Void = { _ in },
   ) async throws -> [String: MLXArray] {
-    let modelDirectoryURL = try await Hub.snapshot(
+    let modelDirectoryURL = try await HubConfiguration.shared.snapshot(
       from: repoId,
       matching: [filename],
-      progressHandler: progressHandler,
+      progressHandler: progressHandler
     )
     let weightFileURL = modelDirectoryURL.appending(path: filename)
     return try loadWeights(from: weightFileURL)
@@ -303,12 +303,12 @@ class SNACDecoder: Module {
   static func loadConfig(
     repoId: String = defaultRepoId,
     filename: String = "config.json",
-    progressHandler: @escaping (Progress) -> Void = { _ in },
+    progressHandler: @escaping (Progress) -> Void = { _ in }
   ) async throws -> SNACConfig {
-    let modelDirectoryURL = try await Hub.snapshot(
+    let modelDirectoryURL = try await HubConfiguration.shared.snapshot(
       from: repoId,
       matching: [filename],
-      progressHandler: progressHandler,
+      progressHandler: progressHandler
     )
     let configFileURL = modelDirectoryURL.appending(path: filename)
     return try loadConfig(from: configFileURL)

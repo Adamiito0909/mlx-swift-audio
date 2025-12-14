@@ -226,10 +226,10 @@ final class DACCodec {
     progressHandler: @escaping @Sendable (Progress) -> Void = { _ in },
   ) async throws -> DACCodec {
     // Download model files from Hub
-    let modelDir = try await HubApi.shared.snapshot(
+    let modelDir = try await HubConfiguration.shared.snapshot(
       from: repoId,
       matching: ["*.safetensors", "*.json"],
-      progressHandler: progressHandler,
+      progressHandler: progressHandler
     )
 
     // Load config

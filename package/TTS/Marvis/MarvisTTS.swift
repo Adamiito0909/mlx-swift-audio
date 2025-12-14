@@ -170,7 +170,7 @@ actor MarvisTTS {
     repoId: String,
     progressHandler: @escaping (Progress) -> Void,
   ) async throws -> (config: MarvisConfig, promptURLs: [URL], weightFileURL: URL) {
-    let modelDirectoryURL = try await Hub.snapshot(from: repoId, progressHandler: progressHandler)
+    let modelDirectoryURL = try await HubConfiguration.shared.snapshot(from: repoId, progressHandler: progressHandler)
     let weightFileURL = modelDirectoryURL.appending(path: "model.safetensors")
     let promptDir = modelDirectoryURL.appending(path: "prompts", directoryHint: .isDirectory)
 

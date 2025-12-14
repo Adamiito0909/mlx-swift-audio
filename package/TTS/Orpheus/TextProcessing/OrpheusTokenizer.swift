@@ -46,10 +46,10 @@ class OrpheusTokenizer {
     repoId: String = defaultRepoId,
     progressHandler: @escaping (Progress) -> Void = { _ in },
   ) async throws -> (tokenizerURL: URL, configURL: URL) {
-    let modelDirectoryURL = try await Hub.snapshot(
+    let modelDirectoryURL = try await HubConfiguration.shared.snapshot(
       from: repoId,
       matching: ["tokenizer.json", "tokenizer_config.json"],
-      progressHandler: progressHandler,
+      progressHandler: progressHandler
     )
     return (
       modelDirectoryURL.appending(path: "tokenizer.json"),
@@ -177,7 +177,7 @@ class OrpheusTokenizer {
   }
 
   private func getBestPair(_ symbols: [String]) -> (pair: StringPair, rank: Int, index: Int)? {
-    var bestPair: (pair: StringPair, rank: Int, index: Int)? = nil
+    var bestPair: (pair: StringPair, rank: Int, index: Int)?
 
     for i in 0 ..< (symbols.count - 1) {
       let pair = StringPair(first: symbols[i], second: symbols[i + 1])

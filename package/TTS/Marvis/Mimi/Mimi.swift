@@ -246,7 +246,7 @@ extension Mimi {
 
     Log.model.debug("[Mimi] Downloading/snapshotting weights file...")
     let snapshotStart = CFAbsoluteTimeGetCurrent()
-    let weightFileURL = try await Hub.snapshot(from: repoId, matching: filename, progressHandler: progressHandler).appending(path: filename)
+    let weightFileURL = try await HubConfiguration.shared.snapshot(from: repoId, matching: [filename], progressHandler: progressHandler).appending(path: filename)
     let snapshotTime = CFAbsoluteTimeGetCurrent() - snapshotStart
     Log.model.debug("[Mimi] Weights file snapshot completed in \(snapshotTime, format: .fixed(precision: 2)) seconds")
 

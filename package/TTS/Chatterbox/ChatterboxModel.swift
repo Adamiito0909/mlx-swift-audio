@@ -341,16 +341,16 @@ class ChatterboxModel: Module {
     // Download both repos in parallel
     Log.model.info("Loading Chatterbox from \(repoId) and S3Tokenizer from \(s3TokenizerRepoId)...")
 
-    async let modelDirectoryTask = Hub.snapshot(
+    async let modelDirectoryTask = HubConfiguration.shared.snapshot(
       from: repoId,
       matching: ["model.safetensors", "tokenizer.json", "config.json"],
-      progressHandler: progressHandler,
+      progressHandler: progressHandler
     )
 
-    async let s3TokenizerDirectoryTask = Hub.snapshot(
+    async let s3TokenizerDirectoryTask = HubConfiguration.shared.snapshot(
       from: s3TokenizerRepoId,
       matching: ["model.safetensors", "config.json"],
-      progressHandler: progressHandler,
+      progressHandler: progressHandler
     )
 
     let (modelDirectory, s3TokenizerDirectory) = try await (modelDirectoryTask, s3TokenizerDirectoryTask)

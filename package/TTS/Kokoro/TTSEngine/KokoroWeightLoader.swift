@@ -1,6 +1,7 @@
 import Foundation
 import Hub
 import MLX
+import MLXAudio
 import MLXNN
 
 class KokoroWeightLoader {
@@ -14,10 +15,10 @@ class KokoroWeightLoader {
     filename: String = defaultWeightsFilename,
     progressHandler: @escaping (Progress) -> Void = { _ in },
   ) async throws -> [String: MLXArray] {
-    let modelDirectoryURL = try await Hub.snapshot(
+    let modelDirectoryURL = try await HubConfiguration.shared.snapshot(
       from: repoId,
       matching: [filename],
-      progressHandler: progressHandler,
+      progressHandler: progressHandler
     )
     let weightFileURL = modelDirectoryURL.appending(path: filename)
     return try loadWeights(from: weightFileURL)
