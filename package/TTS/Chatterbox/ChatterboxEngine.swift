@@ -243,7 +243,21 @@ public final class ChatterboxEngine: TTSEngine {
   ) async -> ChatterboxReferenceAudio {
     Log.tts.debug("Preparing reference audio: \(description)")
 
-    let refWav = MLXArray(samples)
+    let originalDuration = Float(samples.count) / Float(sampleRate)
+    Log.tts.debug("Original reference audio duration: \(originalDuration)s")
+
+    // Trim silence from beginning and end (matching Python implementation)
+    // Chatterbox Python uses trim_top_db=20 which is more aggressive than CosyVoice2
+    let trimmedSamples = AudioTrimmer.trimSilence(
+      samples,
+      sampleRate: sampleRate,
+      config: .chatterbox
+    )
+
+    let trimmedDuration = Float(trimmedSamples.count) / Float(sampleRate)
+    Log.tts.debug("After silence trimming: \(trimmedDuration)s")
+
+    let refWav = MLXArray(trimmedSamples)
     let conditionals = await tts.prepareConditionals(
       refWav: refWav,
       refSr: sampleRate,
@@ -255,7 +269,7 @@ public final class ChatterboxEngine: TTSEngine {
     return ChatterboxReferenceAudio(
       conditionals: conditionals,
       sampleRate: sampleRate,
-      sampleCount: samples.count,
+      sampleCount: trimmedSamples.count,
       description: description,
     )
   }

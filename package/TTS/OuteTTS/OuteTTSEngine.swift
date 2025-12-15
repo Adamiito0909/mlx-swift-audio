@@ -235,13 +235,63 @@ public final class OuteTTSEngine: TTSEngine {
 
     // Load audio samples
     let (samples, sampleRate) = try await loadAudioSamples(from: url)
-    let audioArray = MLXArray(samples)
+
+    let originalDuration = Float(samples.count) / Float(sampleRate)
+    Log.tts.debug("Original reference audio duration: \(originalDuration)s")
+
+    // Find speech bounds for silence trimming
+    // Uses default config with top_db=60 (same as CosyVoice2)
+    let speechBounds = AudioTrimmer.findSpeechBounds(
+      samples,
+      sampleRate: sampleRate,
+      config: .default
+    )
+
+    // Trim silence from beginning and end
+    let trimmedSamples: [Float]
+    let leadingTrimSeconds: Float
+
+    if let bounds = speechBounds {
+      trimmedSamples = Array(samples[bounds.start ..< bounds.end])
+      leadingTrimSeconds = Float(bounds.start) / Float(sampleRate)
+    } else {
+      trimmedSamples = samples
+      leadingTrimSeconds = 0
+    }
+
+    let trimmedDuration = Float(trimmedSamples.count) / Float(sampleRate)
+    Log.tts.debug("After silence trimming: \(trimmedDuration)s (trimmed \(leadingTrimSeconds)s from start)")
+
+    let audioArray = MLXArray(trimmedSamples)
 
     // Transcribe audio with word-level timestamps
-    let (text, words) = try await transcribeAudio(url: url)
+    let (_, originalWords) = try await transcribeAudio(url: url)
 
-    guard !words.isEmpty else {
+    guard !originalWords.isEmpty else {
       throw TTSError.invalidArgument("Could not transcribe audio - no words detected")
+    }
+
+    // Adjust word timestamps to account for trimmed silence at the beginning
+    // Only include words that fall within the trimmed audio bounds
+    let adjustedWords: [(word: String, start: Double, end: Double)] = originalWords.compactMap { word in
+      let adjustedStart = word.start - Double(leadingTrimSeconds)
+      let adjustedEnd = word.end - Double(leadingTrimSeconds)
+
+      // Skip words that ended before our trimmed audio starts
+      guard adjustedEnd > 0 else { return nil }
+
+      // Skip words that start after our trimmed audio ends
+      guard adjustedStart < Double(trimmedDuration) else { return nil }
+
+      return (
+        word: word.word,
+        start: max(0, adjustedStart),
+        end: min(Double(trimmedDuration), adjustedEnd)
+      )
+    }
+
+    guard !adjustedWords.isEmpty else {
+      throw TTSError.invalidArgument("No words remain after silence trimming")
     }
 
     // Resample to 24kHz if needed (OuteTTS native sample rate)
@@ -252,11 +302,15 @@ public final class OuteTTSEngine: TTSEngine {
       audioArray
     }
 
+    // Build adjusted text from the words that remain after trimming
+    // Always trim whitespace from transcription before passing to model
+    let adjustedText = adjustedWords.map(\.word).joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+
     // Create speaker profile using the audio processor
     let profile = try await outeTTS.getSpeaker(
       referenceAudio: resampledAudio,
-      referenceText: text,
-      referenceWords: words,
+      referenceText: adjustedText,
+      referenceWords: adjustedWords,
     )
 
     guard let profile else {

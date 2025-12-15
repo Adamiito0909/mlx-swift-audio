@@ -234,6 +234,22 @@ public final class CosyVoice2Engine: TTSEngine {
   ///   - sampleRate: Sample rate of the audio
   /// - Returns: Transcribed text
   public func transcribe(samples: [Float], sampleRate: Int) async throws -> String {
+    let result = try await transcribeWithTimestamps(samples: samples, sampleRate: sampleRate, wordTimestamps: false)
+    return result.text
+  }
+
+  /// Transcribe audio using Whisper with optional word timestamps
+  ///
+  /// - Parameters:
+  ///   - samples: Audio samples at any sample rate
+  ///   - sampleRate: Sample rate of the audio
+  ///   - wordTimestamps: Whether to include word-level timestamps
+  /// - Returns: Transcription result with optional word timings
+  private func transcribeWithTimestamps(
+    samples: [Float],
+    sampleRate: Int,
+    wordTimestamps: Bool
+  ) async throws -> TranscriptionResult {
     let whisper = try await loadWhisperSTT()
 
     // Resample to 16kHz for Whisper if needed
@@ -250,11 +266,12 @@ public final class CosyVoice2Engine: TTSEngine {
       language: nil, // Auto-detect
       task: .transcribe,
       temperature: 0.0,
-      timestamps: .segment
+      timestamps: wordTimestamps ? .word : .segment,
+      hallucinationSilenceThreshold: wordTimestamps ? 2.0 : nil
     )
 
     Log.tts.debug("Transcribed reference audio: \(result.text)")
-    return result.text
+    return result
   }
 
   public func stop() async {
@@ -389,20 +406,91 @@ public final class CosyVoice2Engine: TTSEngine {
       samples
     }
 
-    // Truncate to max 30 seconds (matching prepareConditionals behavior)
-    // This ensures the transcription matches the audio actually used for conditioning
-    let maxSamples = 30 * targetSampleRate
+    let originalDuration = Float(processedSamples.count) / Float(targetSampleRate)
+    Log.tts.debug("Original reference audio duration: \(originalDuration)s")
+
+    // Step 1: Trim silence from beginning and end (matching Python implementation)
+    // This uses top_db=60 like the Python librosa.effects.trim call
+    processedSamples = AudioTrimmer.trimSilence(
+      processedSamples,
+      sampleRate: targetSampleRate,
+      config: .cosyVoice2
+    )
+
+    let silenceTrimmedDuration = Float(processedSamples.count) / Float(targetSampleRate)
+    Log.tts.debug("After silence trimming: \(silenceTrimmedDuration)s")
+
+    // Step 2: Handle max duration (30 seconds for CosyVoice2)
+    let maxDuration: Float = 30.0
+    let maxSamples = Int(maxDuration) * targetSampleRate
+
+    var finalTranscription = transcription
+    var clippedAtWordBoundary = false
+
     if processedSamples.count > maxSamples {
-      processedSamples = Array(processedSamples.prefix(maxSamples))
-      Log.tts.debug("Truncated reference audio to 30 seconds")
+      // Audio exceeds max duration - need to clip
+      if autoTranscribe {
+        // Use word-boundary clipping for best results
+        // Transcribe with word timestamps to find safe clip point
+        Log.tts.debug("Audio exceeds \(maxDuration)s, using word-boundary clipping...")
+
+        let result = try await transcribeWithTimestamps(
+          samples: processedSamples,
+          sampleRate: targetSampleRate,
+          wordTimestamps: true
+        )
+
+        // Collect all words from all segments
+        var allWords = result.segments.flatMap { $0.words ?? [] }
+
+        if !allWords.isEmpty {
+          // Drop unreliable trailing words (potential hallucinations)
+          allWords = AudioTrimmer.dropUnreliableTrailingWords(
+            allWords,
+            audioDuration: silenceTrimmedDuration,
+            config: .cosyVoice2
+          )
+
+          // Find clip point at word boundary
+          if let (clipSample, validWords) = AudioTrimmer.findWordBoundaryClipPoint(
+            words: allWords,
+            maxDuration: maxDuration,
+            sampleRate: targetSampleRate
+          ) {
+            processedSamples = Array(processedSamples.prefix(clipSample))
+            // Whisper word tokens include leading spaces, so trim the result
+            finalTranscription = validWords.map(\.word).joined().trimmingCharacters(in: .whitespaces)
+            clippedAtWordBoundary = true
+            let newDuration = Float(processedSamples.count) / Float(targetSampleRate)
+            Log.tts.debug("Clipped at word boundary: \(newDuration)s, transcription: \(finalTranscription ?? "")")
+          } else {
+            // Fallback: simple truncation
+            processedSamples = Array(processedSamples.prefix(maxSamples))
+            Log.tts.debug("No valid word boundary found, using simple truncation to \(maxDuration)s")
+          }
+        } else {
+          // No words detected - simple truncation
+          processedSamples = Array(processedSamples.prefix(maxSamples))
+          Log.tts.debug("No words detected, using simple truncation to \(maxDuration)s")
+        }
+      } else {
+        // No auto-transcribe - simple truncation
+        processedSamples = Array(processedSamples.prefix(maxSamples))
+        Log.tts.debug("Truncated reference audio to \(maxDuration) seconds")
+      }
     }
 
-    // Auto-transcribe if enabled and no transcription provided
-    // IMPORTANT: Transcribe AFTER truncation so the transcription matches the clipped audio
-    var finalTranscription = transcription
-    if transcription == nil, autoTranscribe {
-      Log.tts.debug("Auto-transcribing reference audio (after truncation)...")
+    // Auto-transcribe if enabled and no transcription yet
+    // IMPORTANT: Transcribe AFTER clipping so the transcription matches the final audio
+    if finalTranscription == nil, autoTranscribe, !clippedAtWordBoundary {
+      Log.tts.debug("Auto-transcribing reference audio (after clipping)...")
       finalTranscription = try await transcribe(samples: processedSamples, sampleRate: targetSampleRate)
+    }
+
+    // Always trim whitespace from transcription before passing to model
+    finalTranscription = finalTranscription?.trimmingCharacters(in: .whitespacesAndNewlines)
+    if finalTranscription?.isEmpty == true {
+      finalTranscription = nil
     }
 
     let refWav = MLXArray(processedSamples)

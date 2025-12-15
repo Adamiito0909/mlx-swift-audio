@@ -411,9 +411,10 @@ actor CosyVoice2TTS {
     let speakerEmb = speakerEncoder(audio16k)
 
     // Tokenize reference text if provided (using built-in tokenizer)
+    // Always trim whitespace to avoid tokenization issues
     var promptText: MLXArray?
     var promptTextLen: MLXArray?
-    if let text = refText {
+    if let text = refText?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty {
       let tokens = encode(text: text, addSpecialTokens: false)
       promptText = MLXArray(tokens.map { Int32($0) }).reshaped(1, -1)
       promptTextLen = MLXArray([Int32(tokens.count)])
