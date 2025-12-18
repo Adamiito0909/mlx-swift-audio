@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import Kokoro
 import MLXAudio
 import SwiftUI

@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import SwiftUI
 
 /// Toggle between file import and microphone recording

@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import MLX
 
 // MARK: - Reverse Along Axis

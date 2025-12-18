@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import MLXAudio
 
 extension TTSProvider {

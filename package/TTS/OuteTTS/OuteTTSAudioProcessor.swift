@@ -1,3 +1,8 @@
+// Copyright © OuteAI (original model implementation)
+// Copyright © Anthony DePasquale (MLX port)
+// Ported to MLX from https://github.com/edwko/OuteTTS
+// License: licenses/outetts.txt
+
 //  Audio processing and feature extraction for OuteTTS speaker profiles
 
 import Accelerate

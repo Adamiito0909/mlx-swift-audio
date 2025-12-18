@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+//
 // MLX GPU Memory Configuration Utilities
 
 import Foundation

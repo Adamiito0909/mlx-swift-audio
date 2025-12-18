@@ -1,3 +1,8 @@
+// Copyright © 2025 Resemble AI (original model implementation)
+// Copyright © Anthony DePasquale (MLX port)
+// Ported to MLX from https://github.com/resemble-ai/chatterbox
+// License: licenses/chatterbox.txt
+
 // Multi-layer unidirectional LSTM for Chatterbox VoiceEncoder.
 // Uses MLXNN.LSTM layers with weight keys: layers.N.Wx, layers.N.Wh, layers.N.bias
 

@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+//
 // Audio trimming utilities for TTS reference audio preprocessing
 //
 // Provides:

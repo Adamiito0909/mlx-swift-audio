@@ -1,3 +1,6 @@
+// Copyright © 2024 Prince Canuma and contributors to Blaizzy/mlx-audio
+// Copyright © Anthony DePasquale
+
 @preconcurrency import AVFoundation
 import Foundation
 import MLX

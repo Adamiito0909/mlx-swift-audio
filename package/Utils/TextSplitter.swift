@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import Foundation
 
 /// Utilities for splitting text at natural boundaries for TTS processing.

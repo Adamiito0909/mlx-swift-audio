@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import SwiftUI
 
 struct RegularLayoutView: View {

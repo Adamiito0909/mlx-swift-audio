@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 @preconcurrency import AVFoundation
 import MLX
 import Synchronization

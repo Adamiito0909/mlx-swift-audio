@@ -1,5 +1,7 @@
-// CosyVoice2 TTS wrapper with thread-safe generation
-// Similar to ChatterboxTTS actor pattern
+// Copyright © FunAudioLLM contributors (original model implementation)
+// Copyright © Anthony DePasquale (MLX port)
+// Ported to MLX from https://github.com/FunAudioLLM/CosyVoice
+// License: licenses/cosyvoice.txt
 
 import Foundation
 import Hub

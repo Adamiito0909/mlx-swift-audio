@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import Foundation
 import Kokoro
 import MLX

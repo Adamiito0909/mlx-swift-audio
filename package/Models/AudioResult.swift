@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import Foundation
 
 /// Audio generation results are either in-memory samples (for streaming/playback)

@@ -1,5 +1,7 @@
-// CosyVoice2-specific Conditional Flow Matching module
-// Ported from mlx-audio-plus cosyvoice2/flow_matching.py
+// Copyright © FunAudioLLM contributors (original model implementation)
+// Copyright © Anthony DePasquale (MLX port)
+// Ported to MLX from https://github.com/FunAudioLLM/CosyVoice
+// License: licenses/cosyvoice.txt
 
 import Foundation
 import MLX

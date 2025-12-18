@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import Foundation
 
 /// Core protocol that all TTS engines must conform to.

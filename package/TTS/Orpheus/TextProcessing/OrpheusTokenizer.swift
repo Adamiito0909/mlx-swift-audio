@@ -1,3 +1,9 @@
+// Copyright ® Canopy Labs (original model implementation)
+// Ported to MLX from https://github.com/canopyai/Orpheus-TTS
+// Copyright © 2024 Prince Canuma and contributors to Blaizzy/mlx-audio
+// Copyright © Anthony DePasquale
+// License: licenses/orpheus.txt
+
 import Foundation
 import Hub
 import MLX

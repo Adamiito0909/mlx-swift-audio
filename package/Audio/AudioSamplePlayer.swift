@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import Accelerate
 @preconcurrency import AVFoundation
 import Foundation

@@ -1,5 +1,7 @@
-// CosyVoice2 TTS model for Swift MLX
-// Ported from mlx-audio-plus cosyvoice2/cosyvoice2.py
+// Copyright © FunAudioLLM contributors (original model implementation)
+// Copyright © Anthony DePasquale (MLX port)
+// Ported to MLX from https://github.com/FunAudioLLM/CosyVoice
+// License: licenses/cosyvoice.txt
 
 import Foundation
 import MLX

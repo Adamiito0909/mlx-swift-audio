@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 #if os(iOS)
 import AVFoundation
 

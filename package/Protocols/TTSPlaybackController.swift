@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import Foundation
 
 /// Manages audio playback and generation task lifecycle for TTS engines.

@@ -1,4 +1,7 @@
-//  Special tokens for OuteTTS text and audio processing
+// Copyright © OuteAI (original model implementation)
+// Copyright © Anthony DePasquale (MLX port)
+// Ported to MLX from https://github.com/edwko/OuteTTS
+// License: licenses/outetts.txt
 
 import Foundation
 

@@ -1,3 +1,10 @@
+// Copyright © Sesame AI (original model architecture: https://github.com/SesameAILabs/csm)
+// Ported to MLX from https://github.com/Marvis-Labs/marvis-tts
+// Copyright © Marvis Labs
+// Copyright © 2024 Prince Canuma and contributors to Blaizzy/mlx-audio
+// Copyright © Anthony DePasquale
+// License: licenses/marvis.txt
+
 import Foundation
 import MLX
 import MLXNN

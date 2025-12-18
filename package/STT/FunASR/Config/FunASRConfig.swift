@@ -1,3 +1,8 @@
+// Copyright © 2025 FunASR (original model implementation)
+// Copyright © Anthony DePasquale (MLX port)
+// Ported to MLX from https://github.com/modelscope/FunASR
+// License: licenses/funasr.txt
+
 import Foundation
 
 // MARK: - Model Repository

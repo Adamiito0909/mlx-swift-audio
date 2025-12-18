@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import SwiftUI
 
 /// Combined input section with audio source selection and controls

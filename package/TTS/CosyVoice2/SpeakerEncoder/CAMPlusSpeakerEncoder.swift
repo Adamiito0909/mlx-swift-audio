@@ -1,5 +1,7 @@
-// CAMPlus Speaker Encoder for CosyVoice2
-// Wrapper around the existing CAMPPlus implementation from Chatterbox
+// Copyright © FunAudioLLM contributors (original model implementation)
+// Copyright © Anthony DePasquale (MLX port)
+// Ported to MLX from https://github.com/FunAudioLLM/CosyVoice
+// License: licenses/cosyvoice.txt
 
 import Foundation
 import MLX

@@ -1,3 +1,9 @@
+// Copyright © Hexgrad (original model implementation)
+// Ported to MLX from https://github.com/hexgrad/kokoro
+// Copyright © 2024 Prince Canuma and contributors to Blaizzy/mlx-audio
+// Copyright © Anthony DePasquale
+// License: licenses/kokoro.txt
+
 // Bidirectional LSTM implementation.
 // MLXNN doesn't provide a bidirectional variant, so this custom implementation is needed.
 

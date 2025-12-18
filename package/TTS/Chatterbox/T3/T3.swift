@@ -1,3 +1,8 @@
+// Copyright © 2025 Resemble AI (original model implementation)
+// Copyright © Anthony DePasquale (MLX port)
+// Ported to MLX from https://github.com/resemble-ai/chatterbox
+// License: licenses/chatterbox.txt
+
 //  Token-To-Token (T3) TTS model using LLaMA as backbone.
 
 import Foundation

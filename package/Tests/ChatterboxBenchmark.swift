@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import AVFoundation
 import Foundation
 import MLX

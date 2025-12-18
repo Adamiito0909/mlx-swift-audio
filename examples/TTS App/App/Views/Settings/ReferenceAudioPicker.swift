@@ -1,3 +1,5 @@
+// Copyright © Anthony DePasquale
+
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -162,31 +164,31 @@ struct ReferenceAudioPicker: View {
 
   private func handleFileSelection(_ result: Result<[URL], Error>) {
     switch result {
-    case let .success(urls):
-      guard let url = urls.first else { return }
+      case let .success(urls):
+        guard let url = urls.first else { return }
 
-      guard url.startAccessingSecurityScopedResource() else {
-        errorMessage = "Permission denied"
-        return
-      }
-
-      Task {
-        defer { url.stopAccessingSecurityScopedResource() }
-
-        isLoading = true
-        errorMessage = nil
-
-        do {
-          try await onLoadFromFile(url)
-        } catch {
-          errorMessage = error.localizedDescription
+        guard url.startAccessingSecurityScopedResource() else {
+          errorMessage = "Permission denied"
+          return
         }
 
-        isLoading = false
-      }
+        Task {
+          defer { url.stopAccessingSecurityScopedResource() }
 
-    case let .failure(error):
-      errorMessage = error.localizedDescription
+          isLoading = true
+          errorMessage = nil
+
+          do {
+            try await onLoadFromFile(url)
+          } catch {
+            errorMessage = error.localizedDescription
+          }
+
+          isLoading = false
+        }
+
+      case let .failure(error):
+        errorMessage = error.localizedDescription
     }
   }
 

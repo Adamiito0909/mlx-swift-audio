@@ -1,4 +1,8 @@
-//  DAC Vector Quantization layers
+// Copyright © 2023-present, Descript (original model implementation)
+// Ported to MLX from https://github.com/descriptinc/descript-audio-codec
+// Copyright © 2024 Prince Canuma and contributors to Blaizzy/mlx-audio
+// Copyright © Anthony DePasquale (MLX Swift port)
+// License: licenses/dac.txt
 
 import Foundation
 import MLX
