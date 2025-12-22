@@ -13,7 +13,7 @@ import MLXNN
 
 /// Causal 1D convolution with left padding
 class CausalConv1d: Module {
-  @ModuleInfo(key: "conv") var conv: Conv1d
+  @ModuleInfo var conv: Conv1d
   let causalPadding: Int
 
   init(
@@ -52,8 +52,8 @@ class CausalConv1d: Module {
 
 /// Causal 1D block with LayerNorm
 class CausalBlock1D: Module {
-  @ModuleInfo(key: "conv") var conv: CausalConv1d
-  @ModuleInfo(key: "norm") var norm: LayerNorm
+  @ModuleInfo var conv: CausalConv1d
+  @ModuleInfo var norm: LayerNorm
 
   init(dim: Int, dimOut: Int) {
     _conv.wrappedValue = CausalConv1d(inChannels: dim, outChannels: dimOut, kernelSize: 3)

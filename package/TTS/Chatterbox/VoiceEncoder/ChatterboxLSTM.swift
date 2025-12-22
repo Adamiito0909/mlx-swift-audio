@@ -23,7 +23,7 @@ class ChatterboxLSTM: Module {
   let hiddenSize: Int
   let numLayers: Int
 
-  @ModuleInfo(key: "layers") var layers: [LSTM]
+  @ModuleInfo var layers: [LSTM]
 
   init(inputSize: Int, hiddenSize: Int, numLayers: Int = 3) {
     self.inputSize = inputSize

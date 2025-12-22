@@ -20,7 +20,7 @@ class ConvolutionModule: Module {
 
   @ModuleInfo(key: "pointwise_conv1") var pointwiseConv1: Conv1d
   @ModuleInfo(key: "depthwise_conv") var depthwiseConv: Conv1d
-  @ModuleInfo(key: "norm") var norm: Module
+  @ModuleInfo var norm: Module
   @ModuleInfo(key: "pointwise_conv2") var pointwiseConv2: Conv1d
 
   let activation: UnaryLayer

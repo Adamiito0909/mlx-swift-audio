@@ -175,7 +175,7 @@ private class OuteTTSAttention: Module {
 /// Single transformer layer with attention and MLP
 private class OuteTTSTransformerBlock: Module {
   @ModuleInfo(key: "self_attn") var attention: OuteTTSAttention
-  @ModuleInfo(key: "mlp") var mlp: SwiGLUMLP
+  @ModuleInfo var mlp: SwiGLUMLP
 
   @ModuleInfo(key: "input_layernorm") var inputLayerNorm: RMSNorm
   @ModuleInfo(key: "post_attention_layernorm") var postAttentionLayerNorm: RMSNorm
@@ -211,7 +211,7 @@ class OuteTTSModel: Module {
   let config: OuteTTSModelConfig
 
   @ModuleInfo(key: "embed_tokens") var embedTokens: Embedding
-  @ModuleInfo(key: "norm") var norm: RMSNorm
+  @ModuleInfo var norm: RMSNorm
 
   fileprivate let layers: [OuteTTSTransformerBlock]
 
@@ -250,7 +250,7 @@ class OuteTTSModel: Module {
 
 /// OuteTTS model with language modeling head
 class OuteTTSLMHeadModel: Module {
-  @ModuleInfo(key: "model") var model: OuteTTSModel
+  @ModuleInfo var model: OuteTTSModel
   @ModuleInfo(key: "lm_head") var lmHead: Linear?
 
   let config: OuteTTSModelConfig

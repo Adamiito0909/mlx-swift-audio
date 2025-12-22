@@ -150,9 +150,9 @@ class GPT2MLP: Module {
 /// GPT2 transformer block (Pre-LN architecture)
 class GPT2Block: Module {
   @ModuleInfo(key: "ln_1") var ln1: LayerNorm
-  @ModuleInfo(key: "attn") var attn: GPT2Attention
+  @ModuleInfo var attn: GPT2Attention
   @ModuleInfo(key: "ln_2") var ln2: LayerNorm
-  @ModuleInfo(key: "mlp") var mlp: GPT2MLP
+  @ModuleInfo var mlp: GPT2MLP
 
   init(_ config: GPT2Config) {
     _ln1.wrappedValue = LayerNorm(dimensions: config.nEmbd, eps: config.layerNormEpsilon)
@@ -188,7 +188,7 @@ class GPT2Model: Module {
 
   @ModuleInfo(key: "wte") var wte: Embedding
   @ModuleInfo(key: "wpe") var wpe: Embedding
-  @ModuleInfo(key: "h") var h: [GPT2Block]
+  @ModuleInfo var h: [GPT2Block]
   @ModuleInfo(key: "ln_f") var lnF: LayerNorm
 
   init(_ config: GPT2Config) {

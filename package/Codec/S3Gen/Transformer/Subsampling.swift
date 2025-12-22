@@ -32,8 +32,8 @@ class BaseSubsampling: Module {
 /// Linear transform the input without subsampling
 /// Used in UpsampleConformerEncoder
 class LinearNoSubsampling: BaseSubsampling {
-  @ModuleInfo(key: "linear") var linear: Linear
-  @ModuleInfo(key: "norm") var norm: LayerNorm
+  @ModuleInfo var linear: Linear
+  @ModuleInfo var norm: LayerNorm
   @ModuleInfo(key: "pos_enc") var posEncModule: Module?
   let dropoutRate: Float
 

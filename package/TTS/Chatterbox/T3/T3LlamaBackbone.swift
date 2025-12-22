@@ -89,7 +89,7 @@ class T3LlamaAttention: Module {
 
 class T3TransformerBlock: Module {
   @ModuleInfo(key: "self_attn") var attention: T3LlamaAttention
-  @ModuleInfo(key: "mlp") var mlp: SwiGLUMLP
+  @ModuleInfo var mlp: SwiGLUMLP
 
   @ModuleInfo(key: "input_layernorm") var inputLayerNorm: RMSNorm
   @ModuleInfo(key: "post_attention_layernorm") var postAttentionLayerNorm: RMSNorm
@@ -121,8 +121,8 @@ class T3TransformerBlock: Module {
 
 /// Inner model class for weight path matching (tfmr.model.layers, tfmr.model.norm)
 class T3LlamaModel: Module {
-  @ModuleInfo(key: "layers") var layers: [T3TransformerBlock]
-  @ModuleInfo(key: "norm") var norm: RMSNorm
+  @ModuleInfo var layers: [T3TransformerBlock]
+  @ModuleInfo var norm: RMSNorm
 
   init(_ config: T3LlamaConfig) {
     _layers.wrappedValue = (0 ..< config.numHiddenLayers).map { _ in T3TransformerBlock(config) }
@@ -137,7 +137,7 @@ class T3LlamaBackbone: Module {
   let config: T3LlamaConfig
   let kvHeads: [Int]
 
-  @ModuleInfo(key: "model") var model: T3LlamaModel
+  @ModuleInfo var model: T3LlamaModel
 
   init(_ config: T3LlamaConfig) {
     self.config = config

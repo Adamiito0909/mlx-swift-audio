@@ -202,7 +202,7 @@ class CosyVoice2FlowModel: Module {
   @ModuleInfo(key: "input_embedding") var inputEmbedding: Embedding
 
   /// Encoder (UpsampleConformerEncoder)
-  @ModuleInfo(key: "encoder") var encoder: UpsampleConformerEncoder
+  @ModuleInfo var encoder: UpsampleConformerEncoder
 
   /// CFM module
   @ModuleInfo(key: "cfm") var cfm: CosyVoice2ConditionalCFM

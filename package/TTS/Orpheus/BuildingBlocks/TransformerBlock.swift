@@ -110,7 +110,7 @@ private class OrpheusAttention: Module {
 /// Single transformer layer with attention and MLP
 private class OrpheusTransformerBlock: Module {
   @ModuleInfo(key: "self_attn") var attention: OrpheusAttention
-  @ModuleInfo(key: "mlp") var mlp: SwiGLUMLP
+  @ModuleInfo var mlp: SwiGLUMLP
 
   @ModuleInfo(key: "input_layernorm") var inputLayerNorm: RMSNorm
   @ModuleInfo(key: "post_attention_layernorm") var postAttentionLayerNorm: RMSNorm
@@ -146,7 +146,7 @@ class OrpheusModel: Module {
   let config: OrpheusConfig
 
   @ModuleInfo(key: "embed_tokens") var embedTokens: Embedding
-  @ModuleInfo(key: "norm") var norm: RMSNorm
+  @ModuleInfo var norm: RMSNorm
 
   fileprivate let layers: [OrpheusTransformerBlock]
 
@@ -205,7 +205,7 @@ class OrpheusModel: Module {
 
 /// Orpheus model with language modeling head
 class OrpheusLMHeadModel: Module {
-  @ModuleInfo(key: "model") var model: OrpheusModel
+  @ModuleInfo var model: OrpheusModel
   @ModuleInfo(key: "lm_head") var lmHead: Linear?
 
   let config: OrpheusConfig

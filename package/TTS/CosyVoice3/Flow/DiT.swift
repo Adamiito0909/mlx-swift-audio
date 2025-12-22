@@ -111,7 +111,7 @@ class CausalConvPositionEmbedding: Module {
 class InputEmbedding: Module {
   let spkDim: Int
 
-  @ModuleInfo(key: "proj") var proj: Linear
+  @ModuleInfo var proj: Linear
   @ModuleInfo(key: "conv_pos_embed") var convPosEmbed: CausalConvPositionEmbedding
 
   init(melDim: Int, textDim: Int, outDim: Int, spkDim: Int? = nil) {
@@ -206,8 +206,8 @@ class DiTFeedForward: Module {
 
 /// Adaptive Layer Normalization with zero initialization for DiT blocks
 class AdaLayerNormZero: Module {
-  @ModuleInfo(key: "linear") var linear: Linear
-  @ModuleInfo(key: "norm") var norm: LayerNorm
+  @ModuleInfo var linear: Linear
+  @ModuleInfo var norm: LayerNorm
 
   init(dim: Int) {
     _linear.wrappedValue = Linear(dim, dim * 6)
@@ -237,8 +237,8 @@ class AdaLayerNormZero: Module {
 
 /// Final adaptive layer normalization (only shift and scale, no gate)
 class AdaLayerNormZeroFinal: Module {
-  @ModuleInfo(key: "linear") var linear: Linear
-  @ModuleInfo(key: "norm") var norm: LayerNorm
+  @ModuleInfo var linear: Linear
+  @ModuleInfo var norm: LayerNorm
 
   init(dim: Int) {
     _linear.wrappedValue = Linear(dim, dim * 2)
@@ -520,7 +520,7 @@ class DiTAttention: Module {
 /// Diffusion Transformer Block with adaptive layer norm
 class DiTBlock: Module {
   @ModuleInfo(key: "attn_norm") var attnNorm: AdaLayerNormZero
-  @ModuleInfo(key: "attn") var attn: DiTAttention
+  @ModuleInfo var attn: DiTAttention
   @ModuleInfo(key: "ff_norm") var ffNorm: LayerNorm
   @ModuleInfo(key: "ff") var ff: DiTFeedForward
 

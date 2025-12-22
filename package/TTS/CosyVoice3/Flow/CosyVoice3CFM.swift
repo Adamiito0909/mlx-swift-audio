@@ -269,7 +269,7 @@ class CausalMaskedDiffWithDiT: Module {
   @ModuleInfo(key: "input_embedding") var inputEmbedding: Embedding
   @ModuleInfo(key: "spk_embed_affine_layer") var spkEmbedAffineLayer: Linear
   @ModuleInfo(key: "pre_lookahead_layer") var preLookaheadLayer: CosyVoice3PreLookaheadLayer
-  @ModuleInfo(key: "decoder") var decoder: CosyVoice3ConditionalCFM?
+  @ModuleInfo var decoder: CosyVoice3ConditionalCFM?
 
   init(
     inputSize: Int = 512,

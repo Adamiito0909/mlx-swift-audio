@@ -14,7 +14,7 @@ import MLXNN
 
 /// Time-Delay Neural Network layer for Turbo
 class TDNNLayerTurbo: Module {
-  @ModuleInfo(key: "linear") var linear: Conv1d
+  @ModuleInfo var linear: Conv1d
   @ModuleInfo(key: "bn") var bn: BatchNorm
 
   init(
@@ -190,7 +190,7 @@ class CAMDenseTDNNLayerTurbo: Module {
 
 /// CAM Dense TDNN block with multiple layers for Turbo
 class CAMDenseTDNNBlockTurbo: Module {
-  @ModuleInfo(key: "layers") var layers: [CAMDenseTDNNLayerTurbo]
+  @ModuleInfo var layers: [CAMDenseTDNNLayerTurbo]
 
   init(
     numLayers: Int,
@@ -231,7 +231,7 @@ class CAMDenseTDNNBlockTurbo: Module {
 /// Transition layer between dense blocks for Turbo
 class TransitLayerTurbo: Module {
   @ModuleInfo(key: "bn") var bn: BatchNorm
-  @ModuleInfo(key: "linear") var linear: Conv1d
+  @ModuleInfo var linear: Conv1d
 
   init(inChannels: Int, outChannels: Int, bias: Bool = true) {
     _bn.wrappedValue = BatchNorm(featureCount: inChannels)
@@ -252,7 +252,7 @@ class TransitLayerTurbo: Module {
 
 /// Dense layer for final embedding for Turbo
 class DenseLayerTurbo: Module {
-  @ModuleInfo(key: "linear") var linear: Conv1d
+  @ModuleInfo var linear: Conv1d
   @ModuleInfo(key: "bn") var bn: BatchNorm
 
   init(inChannels: Int, outChannels: Int, bias: Bool = false) {
@@ -454,7 +454,7 @@ class StatsPoolTurbo: Module {
 class CAMPPlusTurbo: Module {
   @ModuleInfo(key: "head") var head: FCMTurbo
   @ModuleInfo(key: "tdnn") var tdnn: TDNNLayerTurbo
-  @ModuleInfo(key: "blocks") var blocks: [CAMDenseTDNNBlockTurbo]
+  @ModuleInfo var blocks: [CAMDenseTDNNBlockTurbo]
   @ModuleInfo(key: "transits") var transits: [TransitLayerTurbo]
   @ModuleInfo(key: "out_bn") var outBn: BatchNorm
   @ModuleInfo(key: "stats") var stats: StatsPoolTurbo

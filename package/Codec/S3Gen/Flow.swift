@@ -25,9 +25,9 @@ class CausalMaskedDiffWithXvec: Module {
 
   @ModuleInfo(key: "input_embedding") var inputEmbedding: Embedding
   @ModuleInfo(key: "spk_embed_affine_layer") var spkEmbedAffineLayer: Linear
-  @ModuleInfo(key: "encoder") var encoder: UpsampleConformerEncoder
+  @ModuleInfo var encoder: UpsampleConformerEncoder
   @ModuleInfo(key: "encoder_proj") var encoderProj: Linear
-  @ModuleInfo(key: "decoder") var decoder: CausalConditionalCFM
+  @ModuleInfo var decoder: CausalConditionalCFM
 
   init(
     inputSize: Int = 512,

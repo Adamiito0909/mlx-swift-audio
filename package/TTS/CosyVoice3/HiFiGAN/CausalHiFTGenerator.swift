@@ -18,7 +18,7 @@ class CosyVoice3CausalConv1d: Module {
     case right
   }
 
-  @ModuleInfo(key: "conv") var conv: Conv1d
+  @ModuleInfo var conv: Conv1d
   let causalPadding: Int
   let causalType: CausalType
 
@@ -72,7 +72,7 @@ class CosyVoice3CausalConv1d: Module {
 
 /// Causal 1D convolution with downsampling
 class CosyVoice3CausalConv1dDownSample: Module {
-  @ModuleInfo(key: "conv") var conv: Conv1d
+  @ModuleInfo var conv: Conv1d
   let causalPadding: Int
   let stride: Int
 
@@ -120,7 +120,7 @@ class CosyVoice3CausalConv1dDownSample: Module {
 
 /// Causal 1D convolution with upsampling
 class CosyVoice3CausalConv1dUpsample: Module {
-  @ModuleInfo(key: "conv") var conv: Conv1d
+  @ModuleInfo var conv: Conv1d
   let causalPadding: Int
   let upsampleFactor: Int
 

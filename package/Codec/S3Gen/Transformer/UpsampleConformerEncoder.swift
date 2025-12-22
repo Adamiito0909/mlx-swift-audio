@@ -17,7 +17,7 @@ class Upsample1D: Module {
   let outChannels: Int
   let stride: Int
 
-  @ModuleInfo(key: "conv") var conv: Conv1d
+  @ModuleInfo var conv: Conv1d
 
   init(channels: Int, outChannels: Int, stride: Int = 2) {
     self.channels = channels

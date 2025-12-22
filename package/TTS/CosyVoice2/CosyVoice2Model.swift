@@ -23,9 +23,9 @@ import MLXNN
 class CosyVoice2Model: Module {
   let config: CosyVoice2Config
 
-  @ModuleInfo(key: "llm") var llm: Qwen2LM?
-  @ModuleInfo(key: "flow") var flow: CosyVoice2FlowModule?
-  @ModuleInfo(key: "hifigan") var hifigan: CosyHiFTGenerator?
+  @ModuleInfo var llm: Qwen2LM?
+  @ModuleInfo var flow: CosyVoice2FlowModule?
+  @ModuleInfo var hifigan: CosyHiFTGenerator?
 
   init(
     config: CosyVoice2Config = CosyVoice2Config(),
@@ -411,9 +411,9 @@ class CosyVoice2FlowModule: Module {
 
   @ModuleInfo(key: "input_embedding") var inputEmbedding: Embedding
   @ModuleInfo(key: "spk_embed_affine_layer") var spkEmbedAffineLayer: Linear
-  @ModuleInfo(key: "encoder") var encoder: UpsampleConformerEncoder
+  @ModuleInfo var encoder: UpsampleConformerEncoder
   @ModuleInfo(key: "encoder_proj") var encoderProj: Linear
-  @ModuleInfo(key: "decoder") var decoder: CosyVoice2ConditionalCFM
+  @ModuleInfo var decoder: CosyVoice2ConditionalCFM
 
   init(
     inputSize: Int = 512,

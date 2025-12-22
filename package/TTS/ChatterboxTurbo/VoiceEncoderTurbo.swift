@@ -18,10 +18,10 @@ class VoiceEncoderTurbo: Module {
   let config: VoiceEncConfig
 
   // Three separate LSTM layers (matches Python MLX weight structure)
-  @ModuleInfo(key: "lstm1") var lstm1: LSTM
-  @ModuleInfo(key: "lstm2") var lstm2: LSTM
-  @ModuleInfo(key: "lstm3") var lstm3: LSTM
-  @ModuleInfo(key: "proj") var proj: Linear
+  @ModuleInfo var lstm1: LSTM
+  @ModuleInfo var lstm2: LSTM
+  @ModuleInfo var lstm3: LSTM
+  @ModuleInfo var proj: Linear
 
   // Cosine similarity scaling (learnable parameters)
   @ParameterInfo(key: "similarity_weight") var similarityWeight: MLXArray

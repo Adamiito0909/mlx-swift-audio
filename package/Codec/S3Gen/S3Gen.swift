@@ -66,7 +66,7 @@ struct S3GenRefDict: @unchecked Sendable {
 /// using a Conformer encoder and flow matching decoder with speaker conditioning.
 class S3Token2Mel: Module {
   @ModuleInfo(key: "speaker_encoder") var speakerEncoder: CAMPPlus
-  @ModuleInfo(key: "flow") var flow: CausalMaskedDiffWithXvec
+  @ModuleInfo var flow: CausalMaskedDiffWithXvec
 
   override init() {
     // Speaker encoder (CAM++ for x-vector extraction)

@@ -79,7 +79,7 @@ class AttentionBlock: Module {
   let channels: Int
   let numHeads: Int
 
-  @ModuleInfo(key: "norm") var norm: LayerNorm
+  @ModuleInfo var norm: LayerNorm
   @ModuleInfo(key: "to_q") var toQ: Linear
   @ModuleInfo(key: "to_k") var toK: Linear
   @ModuleInfo(key: "to_v") var toV: Linear
@@ -144,7 +144,7 @@ class Perceiver: Module {
   // Learnable query tokens - stored as a parameter for weight loading
   @ParameterInfo(key: "pre_attention_query") var preAttentionQuery: MLXArray
 
-  @ModuleInfo(key: "attn") var attn: AttentionBlock
+  @ModuleInfo var attn: AttentionBlock
 
   init(
     preAttentionQueryToken: Int = 32,

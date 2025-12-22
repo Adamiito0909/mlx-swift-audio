@@ -184,7 +184,7 @@ class BasicResBlock: Module {
   @ModuleInfo(key: "bn1") var bn1: BatchNorm
   @ModuleInfo(key: "conv2") var conv2: Conv2d
   @ModuleInfo(key: "bn2") var bn2: BatchNorm
-  @ModuleInfo(key: "shortcut") var shortcut: [Module]
+  @ModuleInfo var shortcut: [Module]
 
   init(inPlanes: Int, planes: Int, stride: Int = 1) {
     _conv1.wrappedValue = Conv2d(
@@ -343,7 +343,7 @@ class StatsPool: Module {
 
 /// Time-Delay Neural Network layer
 class TDNNLayer: Module {
-  @ModuleInfo(key: "linear") var linear: Conv1d
+  @ModuleInfo var linear: Conv1d
   @ModuleInfo(key: "nonlinear") var nonlinear: [Module]
 
   init(
@@ -569,7 +569,7 @@ class CAMDenseTDNNLayer: Module {
 
 /// CAM Dense TDNN block with multiple layers
 class CAMDenseTDNNBlock: Module {
-  @ModuleInfo(key: "layers") var layers: [CAMDenseTDNNLayer]
+  @ModuleInfo var layers: [CAMDenseTDNNLayer]
 
   init(
     numLayers: Int,
@@ -612,7 +612,7 @@ class CAMDenseTDNNBlock: Module {
 /// Transition layer between dense blocks
 class TransitLayer: Module {
   @ModuleInfo(key: "nonlinear") var nonlinear: [Module]
-  @ModuleInfo(key: "linear") var linear: Conv1d
+  @ModuleInfo var linear: Conv1d
 
   init(inChannels: Int, outChannels: Int, bias: Bool = true, configStr: String = "batchnorm-relu") {
     _nonlinear.wrappedValue = getNonlinear(configStr: configStr, channels: inChannels)
@@ -640,7 +640,7 @@ class TransitLayer: Module {
 
 /// Dense layer for final embedding
 class DenseLayer: Module {
-  @ModuleInfo(key: "linear") var linear: Conv1d
+  @ModuleInfo var linear: Conv1d
   @ModuleInfo(key: "nonlinear") var nonlinear: [BatchNorm]
 
   init(inChannels: Int, outChannels: Int, bias: Bool = false, configStr: String = "batchnorm-relu") {
@@ -689,7 +689,7 @@ class CAMPPlus: Module {
 
   @ModuleInfo(key: "head") var head: FCM
   @ModuleInfo(key: "tdnn") var tdnn: TDNNLayer
-  @ModuleInfo(key: "blocks") var blocks: [CAMDenseTDNNBlock]
+  @ModuleInfo var blocks: [CAMDenseTDNNBlock]
   @ModuleInfo(key: "transits") var transits: [TransitLayer]
   @ModuleInfo(key: "out_nonlinear") var outNonlinear: [Module]
   @ModuleInfo(key: "stats") var stats: StatsPool

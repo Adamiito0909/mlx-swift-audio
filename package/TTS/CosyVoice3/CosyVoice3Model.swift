@@ -25,9 +25,9 @@ import MLXNN
 class CosyVoice3Model: Module {
   let config: CosyVoice3Config
 
-  @ModuleInfo(key: "llm") var llm: CosyVoice3LM?
-  @ModuleInfo(key: "flow") var flow: CosyVoice3FlowModule?
-  @ModuleInfo(key: "hifigan") var hifigan: CausalHiFTGenerator?
+  @ModuleInfo var llm: CosyVoice3LM?
+  @ModuleInfo var flow: CosyVoice3FlowModule?
+  @ModuleInfo var hifigan: CausalHiFTGenerator?
 
   var sampleRate: Int {
     config.hifigan.samplingRate
@@ -561,7 +561,7 @@ class CosyVoice3FlowModule: Module {
   @ModuleInfo(key: "input_embedding") var inputEmbedding: Embedding
   @ModuleInfo(key: "spk_embed_affine_layer") var spkEmbedAffineLayer: Linear
   @ModuleInfo(key: "pre_lookahead_layer") var preLookaheadLayer: CosyVoice3PreLookaheadLayer
-  @ModuleInfo(key: "decoder") var decoder: CosyVoice3ConditionalCFM
+  @ModuleInfo var decoder: CosyVoice3ConditionalCFM
 
   init(
     inputSize: Int = 512,

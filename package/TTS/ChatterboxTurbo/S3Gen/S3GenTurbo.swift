@@ -37,9 +37,9 @@ class S3Token2MelTurbo: Module {
   @ModuleInfo(key: "input_embedding") var inputEmbedding: Embedding
   @ModuleInfo(key: "speaker_encoder") var speakerEncoder: CAMPPlusTurbo
   @ModuleInfo(key: "spk_embed_affine_layer") var spkEmbedAffineLayer: Linear
-  @ModuleInfo(key: "encoder") var encoder: CBTUpsampleEncoder
+  @ModuleInfo var encoder: CBTUpsampleEncoder
   @ModuleInfo(key: "encoder_proj") var encoderProj: Linear
-  @ModuleInfo(key: "decoder") var decoder: CBTCausalConditionalCFM
+  @ModuleInfo var decoder: CBTCausalConditionalCFM
 
   init(meanflow: Bool = false) {
     self.meanflow = meanflow

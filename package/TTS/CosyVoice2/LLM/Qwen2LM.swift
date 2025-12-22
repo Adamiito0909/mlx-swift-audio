@@ -132,7 +132,7 @@ class Qwen2MLP: Module, UnaryLayer {
 /// Transformer block for Qwen2
 class Qwen2TransformerBlock: Module {
   @ModuleInfo(key: "self_attn") var attention: Qwen2Attention
-  @ModuleInfo(key: "mlp") var mlp: Qwen2MLP
+  @ModuleInfo var mlp: Qwen2MLP
   @ModuleInfo(key: "input_layernorm") var inputLayerNorm: RMSNorm
   @ModuleInfo(key: "post_attention_layernorm") var postAttentionLayerNorm: RMSNorm
 
@@ -158,7 +158,7 @@ class Qwen2ModelInner: Module {
   @ModuleInfo(key: "embed_tokens") var embedTokens: Embedding
 
   @ModuleInfo var layers: [Qwen2TransformerBlock]
-  @ModuleInfo(key: "norm") var norm: RMSNorm
+  @ModuleInfo var norm: RMSNorm
 
   init(_ config: Qwen2Config) {
     _embedTokens.wrappedValue = Embedding(embeddingCount: config.vocabSize, dimensions: config.hiddenSize)
@@ -262,7 +262,7 @@ class Qwen2LM: Module {
   @ModuleInfo(key: "llm_embedding") var llmEmbedding: Embedding
 
   // LLM backbone
-  @ModuleInfo(key: "llm") var llm: Qwen2Encoder
+  @ModuleInfo var llm: Qwen2Encoder
 
   // Output projection: LLM hidden -> speech token logits
   @ModuleInfo(key: "llm_decoder") var llmDecoder: Linear

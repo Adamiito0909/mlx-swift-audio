@@ -231,7 +231,7 @@ private class MarvisAttention: Module {
 
 private class MarvisTransformerBlock: Module {
   @ModuleInfo(key: "self_attn") var attention: MarvisAttention
-  @ModuleInfo(key: "mlp") var mlp: SwiGLUMLP
+  @ModuleInfo var mlp: SwiGLUMLP
 
   @ModuleInfo(key: "input_layernorm") var inputLayerNorm: RMSNorm
   @ModuleInfo(key: "post_attention_layernorm") var postAttentionLayerNorm: RMSNorm

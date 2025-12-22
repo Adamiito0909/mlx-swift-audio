@@ -52,8 +52,8 @@ func getFrameStep(
 class VoiceEncoder: Module {
   let config: VoiceEncConfig
 
-  @ModuleInfo(key: "lstm") var lstm: ChatterboxLSTM
-  @ModuleInfo(key: "proj") var proj: Linear
+  @ModuleInfo var lstm: ChatterboxLSTM
+  @ModuleInfo var proj: Linear
 
   // Cosine similarity scaling (learnable parameters)
   @ParameterInfo(key: "similarity_weight") var similarityWeight: MLXArray

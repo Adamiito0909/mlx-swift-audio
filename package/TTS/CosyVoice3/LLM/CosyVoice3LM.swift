@@ -132,7 +132,7 @@ class CosyVoice3MLP: Module, UnaryLayer {
 /// Transformer block for Qwen2
 class CosyVoice3TransformerBlock: Module {
   @ModuleInfo(key: "self_attn") var attention: CosyVoice3Attention
-  @ModuleInfo(key: "mlp") var mlp: CosyVoice3MLP
+  @ModuleInfo var mlp: CosyVoice3MLP
   @ModuleInfo(key: "input_layernorm") var inputLayerNorm: RMSNorm
   @ModuleInfo(key: "post_attention_layernorm") var postAttentionLayerNorm: RMSNorm
 
@@ -158,7 +158,7 @@ class CosyVoice3Qwen2ModelInner: Module {
   @ModuleInfo(key: "embed_tokens") var embedTokens: Embedding
 
   @ModuleInfo var layers: [CosyVoice3TransformerBlock]
-  @ModuleInfo(key: "norm") var norm: RMSNorm
+  @ModuleInfo var norm: RMSNorm
 
   init(_ config: CosyVoice3Qwen2Config) {
     _embedTokens.wrappedValue = Embedding(embeddingCount: config.vocabSize, dimensions: config.hiddenSize)
@@ -256,7 +256,7 @@ class CosyVoice3LM: Module {
   let mixRatio: [Int]
 
   // LLM backbone
-  @ModuleInfo(key: "llm") var llm: CosyVoice3Qwen2Encoder
+  @ModuleInfo var llm: CosyVoice3Qwen2Encoder
 
   // Output projection: no bias, extended vocabulary
   @ModuleInfo(key: "llm_decoder") var llmDecoder: Linear

@@ -87,8 +87,8 @@ class CBTRelPositionalEncoding: Module {
 
 /// Linear input projection with LayerNorm and positional encoding
 class CBTLinearInput: Module {
-  @ModuleInfo(key: "linear") var linear: Linear
-  @ModuleInfo(key: "norm") var norm: LayerNorm
+  @ModuleInfo var linear: Linear
+  @ModuleInfo var norm: LayerNorm
   @ModuleInfo(key: "pos_enc") var posEnc: CBTRelPositionalEncoding
 
   init(inputSize: Int, outputSize: Int, dropout: Float = 0.1) {
@@ -327,7 +327,7 @@ class CBTUpsample1D: Module {
   let channels: Int
   let stride: Int
 
-  @ModuleInfo(key: "conv") var conv: Conv1d
+  @ModuleInfo var conv: Conv1d
 
   init(channels: Int, stride: Int = 2) {
     self.channels = channels

@@ -14,7 +14,7 @@ import MLXNN
 
 /// Conv1d wrapper that accepts PyTorch format (B, C, T) input
 class CBTConv1dPT: Module {
-  @ModuleInfo(key: "conv") var conv: Conv1d
+  @ModuleInfo var conv: Conv1d
 
   init(inChannels: Int, outChannels: Int, kernelSize: Int, stride: Int = 1, padding: Int = 0, dilation: Int = 1) {
     _conv.wrappedValue = Conv1d(
@@ -112,7 +112,7 @@ class CBTCausalConv1d: Module {
   let dilation: Int
   let causalPadding: Int
 
-  @ModuleInfo(key: "conv") var conv: CBTConv1dPT
+  @ModuleInfo var conv: CBTConv1dPT
 
   init(inChannels: Int, outChannels: Int, kernelSize: Int, stride: Int = 1, dilation: Int = 1) {
     self.kernelSize = kernelSize
@@ -141,8 +141,8 @@ class CBTCausalConv1d: Module {
 
 /// Basic 1D block with conv, group norm, and mish activation
 class CBTBlock1D: Module {
-  @ModuleInfo(key: "conv") var conv: CBTConv1dPT
-  @ModuleInfo(key: "norm") var norm: GroupNorm
+  @ModuleInfo var conv: CBTConv1dPT
+  @ModuleInfo var norm: GroupNorm
 
   init(dim: Int, dimOut: Int, groups: Int = 8) {
     _conv.wrappedValue = CBTConv1dPT(inChannels: dim, outChannels: dimOut, kernelSize: 3, padding: 1)
@@ -192,7 +192,7 @@ class CBTCausalBlock1D: Module {
 class CBTResnetBlock1D: Module {
   let causal: Bool
 
-  @ModuleInfo(key: "mlp") var mlp: [Linear]
+  @ModuleInfo var mlp: [Linear]
   @ModuleInfo(key: "block1") var block1: Module
   @ModuleInfo(key: "block2") var block2: Module
   @ModuleInfo(key: "res_conv") var resConv: CBTConv1dPT
@@ -237,7 +237,7 @@ class CBTResnetBlock1D: Module {
 
 /// 1D downsampling layer
 class CBTDownsample1D: Module {
-  @ModuleInfo(key: "conv") var conv: CBTConv1dPT
+  @ModuleInfo var conv: CBTConv1dPT
 
   init(dim: Int) {
     _conv.wrappedValue = CBTConv1dPT(inChannels: dim, outChannels: dim, kernelSize: 3, stride: 2, padding: 1)
@@ -252,7 +252,7 @@ class CBTDownsample1D: Module {
 
 /// 1D upsampling layer with conv transpose
 class CBTUpsample1DDecoder: Module {
-  @ModuleInfo(key: "conv") var conv: CBTConvTranspose1dPT
+  @ModuleInfo var conv: CBTConvTranspose1dPT
 
   init(dim: Int) {
     _conv.wrappedValue = CBTConvTranspose1dPT(inChannels: dim, outChannels: dim, kernelSize: 4, stride: 2, padding: 1)
@@ -328,7 +328,7 @@ class CBTSelfAttention1D: Module {
 
 /// GELU activation with linear projection
 class CBTGELUProj: Module {
-  @ModuleInfo(key: "proj") var proj: Linear
+  @ModuleInfo var proj: Linear
 
   init(dimIn: Int, dimOut: Int) {
     _proj.wrappedValue = Linear(dimIn, dimOut)
@@ -345,7 +345,7 @@ class CBTGELUProj: Module {
 /// Weight keys are remapped in sanitizeWeights: net.0.* -> net.gelu.*, net.1.* -> net.linear.*
 class CBTFFNet: Module {
   @ModuleInfo(key: "gelu") var gelu: CBTGELUProj
-  @ModuleInfo(key: "linear") var linear: Linear
+  @ModuleInfo var linear: Linear
 
   init(dim: Int, innerDim: Int) {
     _gelu.wrappedValue = CBTGELUProj(dimIn: dim, dimOut: innerDim)

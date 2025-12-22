@@ -63,8 +63,8 @@ class TimestepEmbedding: Module {
 
 /// 1D convolutional block with group norm
 class Block1D: Module {
-  @ModuleInfo(key: "conv") var conv: Conv1d
-  @ModuleInfo(key: "norm") var norm: GroupNorm
+  @ModuleInfo var conv: Conv1d
+  @ModuleInfo var norm: GroupNorm
 
   init(dim: Int, dimOut: Int, groups: Int = 8) {
     _conv.wrappedValue = Conv1d(inputChannels: dim, outputChannels: dimOut, kernelSize: 3, padding: 1)
@@ -117,7 +117,7 @@ class ResnetBlock1D: Module {
 
 /// 1D downsampling with stride-2 convolution
 class Downsample1D: Module {
-  @ModuleInfo(key: "conv") var conv: Conv1d
+  @ModuleInfo var conv: Conv1d
 
   init(dim: Int) {
     _conv.wrappedValue = Conv1d(inputChannels: dim, outputChannels: dim, kernelSize: 3, stride: 2, padding: 1)
@@ -139,7 +139,7 @@ class MatchaUpsample1D: Module {
   let channels: Int
   let useConvTranspose: Bool
 
-  @ModuleInfo(key: "conv") var conv: ConvTransposed1d
+  @ModuleInfo var conv: ConvTransposed1d
 
   init(channels: Int, useConvTranspose: Bool = true) {
     self.channels = channels

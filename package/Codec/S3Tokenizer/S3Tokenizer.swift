@@ -319,9 +319,9 @@ class FSMNMultiHeadAttention: Module {
 
 /// Residual attention block with FSMN
 class S3ResidualAttentionBlock: Module {
-  @ModuleInfo(key: "attn") var attn: FSMNMultiHeadAttention
+  @ModuleInfo var attn: FSMNMultiHeadAttention
   @ModuleInfo(key: "attn_ln") var attnLn: LayerNorm
-  @ModuleInfo(key: "mlp") var mlp: Sequential
+  @ModuleInfo var mlp: Sequential
   @ModuleInfo(key: "mlp_ln") var mlpLn: LayerNorm
 
   init(nState: Int, nHead: Int, kernelSize: Int = 31) {
@@ -364,7 +364,7 @@ class AudioEncoderV2: Module {
 
   @ModuleInfo(key: "conv1") var conv1: Conv1d
   @ModuleInfo(key: "conv2") var conv2: Conv1d
-  @ModuleInfo(key: "blocks") var blocks: [S3ResidualAttentionBlock]
+  @ModuleInfo var blocks: [S3ResidualAttentionBlock]
 
   init(nMels: Int, nState: Int, nHead: Int, nLayer: Int, stride: Int) {
     self.stride = stride
@@ -442,7 +442,7 @@ class AudioEncoderV2: Module {
 class S3TokenizerV2: Module {
   let config: S3TokenizerModelConfig
 
-  @ModuleInfo(key: "encoder") var encoder: AudioEncoderV2
+  @ModuleInfo var encoder: AudioEncoderV2
   @ModuleInfo(key: "quantizer") var quantizer: FSQVectorQuantization
 
   init(name: String = "speech_tokenizer_v2_25hz", config: S3TokenizerModelConfig = S3TokenizerModelConfig()) {
@@ -665,7 +665,7 @@ class S3TokenizerV2: Module {
 class S3TokenizerV3: Module {
   let config: S3TokenizerV3ModelConfig
 
-  @ModuleInfo(key: "encoder") var encoder: AudioEncoderV2
+  @ModuleInfo var encoder: AudioEncoderV2
   @ModuleInfo(key: "quantizer") var quantizer: FSQVectorQuantization
 
   init(name _: String = "speech_tokenizer_v3", config: S3TokenizerV3ModelConfig = S3TokenizerV3ModelConfig()) {

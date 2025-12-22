@@ -81,7 +81,7 @@ class DiffusersAttention: Module {
 
 /// Feed-forward network with GELU activation
 class FeedForward: Module {
-  @ModuleInfo(key: "layers") var layers: [Linear]
+  @ModuleInfo var layers: [Linear]
 
   init(dim: Int, innerDim: Int) {
     _layers.wrappedValue = [
@@ -104,7 +104,7 @@ class FeedForward: Module {
 class BasicTransformerBlock: Module {
   @ModuleInfo(key: "norm1") var norm1: LayerNorm
   @ModuleInfo(key: "norm3") var norm3: LayerNorm
-  @ModuleInfo(key: "attn") var attn: DiffusersAttention
+  @ModuleInfo var attn: DiffusersAttention
   @ModuleInfo(key: "ff") var ff: FeedForward
 
   init(
