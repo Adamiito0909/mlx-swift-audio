@@ -214,7 +214,7 @@ public final class CosyVoice3Engine: TTSEngine {
 
     Log.model.info("Loading Whisper for transcription...")
     let whisper = try await WhisperSTT.load(
-      modelSize: .largeTurbo,
+      modelSize: .base,
       quantization: .q4
     )
     whisperSTT = whisper
